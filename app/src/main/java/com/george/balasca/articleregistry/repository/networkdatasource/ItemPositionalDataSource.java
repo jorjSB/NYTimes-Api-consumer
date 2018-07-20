@@ -12,6 +12,8 @@ import com.george.balasca.articleregistry.model.apiresponse.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
 import com.george.balasca.articleregistry.repository.Status;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
@@ -96,9 +98,11 @@ public class ItemPositionalDataSource extends PositionalDataSource<Article> {
         afterParams = params;
         networkState.postValue(NetworkState.LOADING);
 
+
         service.getQueriedArticles(params.startPosition/10, "trump").enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+
                 if (response.isSuccessful() && response.code() == 200) {
 
                     ArrayList<Article> articleList = new ArrayList();
@@ -109,8 +113,22 @@ public class ItemPositionalDataSource extends PositionalDataSource<Article> {
                     networkState.postValue(NetworkState.LOADED);
                     initialParams = null;
                 } else {
-                    Log.e("API call failed", response.message());
+                    Log.e("API call failed", "REASON: " + response.message());
                     networkState.postValue(new NetworkState(Status.FAILED, response.message()));
+
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        String postError = null;
+                        postError = jObjError.optString("message");
+                        if(postError.isEmpty())
+                            postError = jObjError.optString("errors");
+
+                        networkState.postValue(new NetworkState(Status.FAILED, postError));
+                    } catch (Exception e) {
+                        Log.d(TAG, "Response status errorBody RAISED Exception: " + e.getMessage());
+                    }
+
+
                 }
 
             }

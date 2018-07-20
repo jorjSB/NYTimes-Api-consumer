@@ -8,9 +8,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.george.balasca.articleregistry.R;
+import com.george.balasca.articleregistry.repository.NetworkState;
+import com.george.balasca.articleregistry.repository.Status;
 
 /**
  * An activity representing a list of Article. This activity
@@ -68,12 +72,20 @@ public class ArticleListActivity extends AppCompatActivity {
             articleListAdapter.submitList(pagedList);
         });
 
-//        viewModel.networkState.observe(this, networkState -> {
-//            articleListAdapter.setNetworkState(networkState);
-//            Log.d(TAG, "Network State Change");
-//        });
+        viewModel.networkState.observe(this, networkState -> {
+             articleListAdapter.setNetworkState(networkState);
+             if(networkState.getNetworkStatus() == Status.FAILED)
+                showSnack(networkState);
+        });
 
         recyclerView.setAdapter(articleListAdapter);
     }
+
+    private void showSnack(NetworkState networkState) {
+        Snackbar.make(
+                findViewById(R.id.fab)
+                , networkState.getMessage(), Snackbar.LENGTH_LONG).show();
+    }
+
 
 }
