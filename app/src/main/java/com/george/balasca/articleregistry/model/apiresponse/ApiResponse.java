@@ -20,14 +20,6 @@ public class ApiResponse {
     @Expose
     private ResponseBody responseBody;
 
-    @SerializedName("message")
-    @Expose
-    private String message;
-
-    @SerializedName("errors")
-    @Expose
-    private String errors;
-
     // ************************************************************************************************************************
 
     public String getStatus() {
@@ -54,19 +46,4 @@ public class ApiResponse {
         this.responseBody = responseBody;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getErrors() {
-        return errors;
-    }
-
-    public void setErrors(String errors) {
-        this.errors = errors;
-    }
 }

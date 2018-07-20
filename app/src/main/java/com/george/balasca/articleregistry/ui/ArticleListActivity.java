@@ -8,9 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.repository.NetworkState;
@@ -28,7 +26,7 @@ public class ArticleListActivity extends AppCompatActivity {
 
     private static final String TAG = ArticleListActivity.class.getSimpleName();
     private boolean mTwoPane;
-    private ArticlesViewModel viewModel;
+    private APIArticlesViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +62,7 @@ public class ArticleListActivity extends AppCompatActivity {
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
 //        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
 
-        viewModel = ViewModelProviders.of(this).get(ArticlesViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(APIArticlesViewModel.class);
 
         ArticleListAdapter articleListAdapter = new ArticleListAdapter(this, mTwoPane);
 
@@ -83,7 +81,7 @@ public class ArticleListActivity extends AppCompatActivity {
 
     private void showSnack(NetworkState networkState) {
         Snackbar.make(
-                findViewById(R.id.fab)
+                findViewById(R.id.article_list)
                 , networkState.getMessage(), Snackbar.LENGTH_LONG).show();
     }
 
