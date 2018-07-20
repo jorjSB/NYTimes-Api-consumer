@@ -82,7 +82,7 @@ public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.V
         }
 
         public void bindTo(Article article) {
-            articleItemView.setText(article.getHeadline().getMain());
+            articleItemView.setText(article.getWebUrl());
         }
     }
 

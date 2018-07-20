@@ -7,9 +7,6 @@ import java.util.concurrent.Executor;
 
 public class ArticleDataSourceFactory extends DataSource.Factory  {
 
-//    MutableLiveData<ItemKeyedArticleDataSource> mutableLiveData;
-//    ItemKeyedArticleDataSource itemKeyedArticleDataSource;
-
     MutableLiveData<ItemPositionalDataSource> mutableLiveData;
     ItemPositionalDataSource itemPositionalDataSource;
 

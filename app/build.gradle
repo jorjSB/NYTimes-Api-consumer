@@ -28,6 +28,8 @@ ext {
     lifecycleVersion = "1.1.1"
     androidSupportVersion = "27.1.1"
     loggingInterceptorVersion = "3.9.1"
+    roomVersion = "1.1.1"
+    dbDebuggerVersion = "1.0.4"
 }
 
 dependencies {
@@ -46,5 +48,13 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${loggingInterceptorVersion}"
+
+    // room
+    implementation "android.arch.persistence.room:runtime:${roomVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${roomVersion}"
+
+    // DB debugger
+    debugImplementation "com.amitshekhar.android:debug-db:${dbDebuggerVersion}"
+
 
 }

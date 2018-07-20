@@ -10,9 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.repository.NetworkState;
-import com.george.balasca.articleregistry.repository.Status;
+import com.george.balasca.articleregistry.ui.viewmodels.APIArticlesViewModel;
+import com.george.balasca.articleregistry.ui.viewmodels.DBArticleListViewModel;
 
 /**
  * An activity representing a list of Article. This activity
@@ -27,6 +29,7 @@ public class ArticleListActivity extends AppCompatActivity {
     private static final String TAG = ArticleListActivity.class.getSimpleName();
     private boolean mTwoPane;
     private APIArticlesViewModel viewModel;
+    private DBArticleListViewModel localDBViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +41,14 @@ public class ArticleListActivity extends AppCompatActivity {
         toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Inserting mock data into the DB", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                localDBViewModel.insertDummyArticlesIntoDB();
             }
         });
 
@@ -60,23 +66,21 @@ public class ArticleListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-//        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
 
-        viewModel = ViewModelProviders.of(this).get(APIArticlesViewModel.class);
+        // HACK
+//        recyclerView.setItemAnimator(null);
 
         ArticleListAdapter articleListAdapter = new ArticleListAdapter(this, mTwoPane);
 
-        viewModel.articleList.observe(this, pagedList -> {
-            articleListAdapter.submitList(pagedList);
-        });
+        localDBViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this)).get(DBArticleListViewModel.class);
 
-        viewModel.networkState.observe(this, networkState -> {
-             articleListAdapter.setNetworkState(networkState);
-             if(networkState.getNetworkStatus() == Status.FAILED)
-                showSnack(networkState);
+        localDBViewModel.pagedListLiveData.observe(this, pagedListLiveData ->{
+            if(pagedListLiveData != null)
+                articleListAdapter.submitList(pagedListLiveData);
         });
 
         recyclerView.setAdapter(articleListAdapter);
+
     }
 
     private void showSnack(NetworkState networkState) {

@@ -1,6 +1,10 @@
 
 package com.george.balasca.articleregistry.model.apiresponse;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 
@@ -9,8 +13,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Entity(tableName = "article",
+        indices={@Index(value="id")})
 public class Article {
-
+    @PrimaryKey(autoGenerate = false)
+    @SerializedName("_id")
+    @Expose
+    @NonNull
+    private String id;
     @SerializedName("web_url")
     @Expose
     private String webUrl;
@@ -25,12 +35,15 @@ public class Article {
     private String source;
     @SerializedName("multimedia")
     @Expose
+    @Ignore
     private List<Multimedium> multimedia = null;
     @SerializedName("headline")
     @Expose
+    @Ignore
     private Headline headline;
     @SerializedName("keywords")
     @Expose
+    @Ignore
     private List<Keyword> keywords = null;
     @SerializedName("pub_date")
     @Expose
@@ -41,9 +54,6 @@ public class Article {
     @SerializedName("type_of_material")
     @Expose
     private String typeOfMaterial;
-    @SerializedName("_id")
-    @Expose
-    private String id;
     @SerializedName("section_name")
     @Expose
     private String sectionName;
@@ -155,7 +165,7 @@ public class Article {
 
         @Override
         public boolean areContentsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem.equals(newItem);
+            return this.equals(newItem);
         }
     };
 

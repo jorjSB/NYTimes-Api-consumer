@@ -1,4 +1,4 @@
-package com.george.balasca.articleregistry.ui;
+package com.george.balasca.articleregistry.ui.viewmodels;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
