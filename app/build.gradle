@@ -24,12 +24,18 @@ android {
 
 ext {
     retrofitVersion = "2.2.0"
-    pagingVersion = "1.0.1"
-    lifecycleVersion = "1.1.1"
     androidSupportVersion = "27.1.1"
     loggingInterceptorVersion = "3.9.1"
-    roomVersion = "1.1.1"
     dbDebuggerVersion = "1.0.4"
+
+    // latest
+    roomVersion = "1.1.1"
+    lifecycleVersion = "1.1.1"
+    pagingVersion = "1.0.1"
+    // from the official F*****G WORKING example
+//    roomVersion = "1.1.0-beta1"
+//    lifecycleVersion = "1.1.1"
+//    pagingVersion = "1.0.0-beta1"
 }
 
 dependencies {

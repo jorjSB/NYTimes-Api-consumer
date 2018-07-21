@@ -6,6 +6,7 @@ import android.util.Log;
 import com.george.balasca.articleregistry.model.apiresponse.Article;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
@@ -22,12 +23,12 @@ public class LocalCache {
         this.ioExecutor = ioExecutor;
     }
 
-    public void insertAllArticles(ArrayList<Article> articleArrayList){
+    public void insertAllArticles(List<Article> articleArrayList){
         ioExecutor.execute(new Runnable() {
             @Override
             public void run() {
-            Log.d(TAG, "inserting " + articleArrayList.size() + " repos");
-            articleDao.insertArticles(articleArrayList);
+                Log.d(TAG, "inserting " + articleArrayList.size() + " repos");
+                articleDao.insertArticles(articleArrayList);
             }
         });
     }
@@ -36,7 +37,7 @@ public class LocalCache {
         // TODO
     }
 
-    public DataSource.Factory getAllArticles() {
+    public DataSource.Factory<Integer, Article> getAllArticles() {
         return articleDao.getAllArticles();
     }
 

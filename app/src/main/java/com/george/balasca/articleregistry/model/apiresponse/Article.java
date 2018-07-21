@@ -165,7 +165,7 @@ public class Article {
 
         @Override
         public boolean areContentsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return this.equals(newItem);
+            return oldItem.getWebUrl() == newItem.getWebUrl();
         }
     };
 

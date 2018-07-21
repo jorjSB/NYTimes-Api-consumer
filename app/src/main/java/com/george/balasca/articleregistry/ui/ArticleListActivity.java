@@ -8,11 +8,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.repository.NetworkState;
+import com.george.balasca.articleregistry.ui.adapter.DummyPagedListAdapter;
+import com.george.balasca.articleregistry.ui.adapter._ArticleListAdapter;
 import com.george.balasca.articleregistry.ui.viewmodels.APIArticlesViewModel;
 import com.george.balasca.articleregistry.ui.viewmodels.DBArticleListViewModel;
 
@@ -48,7 +51,7 @@ public class ArticleListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Inserting mock data into the DB", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                localDBViewModel.insertDummyArticlesIntoDB();
+                // localDBViewModel.insertDummyArticlesIntoDB();
             }
         });
 
@@ -63,6 +66,8 @@ public class ArticleListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.article_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        localDBViewModel.searchRepo("");
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -70,11 +75,13 @@ public class ArticleListActivity extends AppCompatActivity {
         // HACK
 //        recyclerView.setItemAnimator(null);
 
-        ArticleListAdapter articleListAdapter = new ArticleListAdapter(this, mTwoPane);
+//        _ArticleListAdapter articleListAdapter = new _ArticleListAdapter(this, mTwoPane);
+        DummyPagedListAdapter articleListAdapter = new DummyPagedListAdapter(this);
 
         localDBViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this)).get(DBArticleListViewModel.class);
 
-        localDBViewModel.pagedListLiveData.observe(this, pagedListLiveData ->{
+        localDBViewModel.articlesLiveData.observe(this, pagedListLiveData ->{
+            Log.d(TAG, "articlesLiveData.observe size: " + pagedListLiveData.size());
             if(pagedListLiveData != null)
                 articleListAdapter.submitList(pagedListLiveData);
         });

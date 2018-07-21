@@ -13,7 +13,7 @@ import com.george.balasca.articleregistry.model.apiresponse.Article;
 import java.util.ArrayList;
 import java.util.List;
 
-@Database(entities = {Article.class}, version = 1)
+@Database(entities = {Article.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private final static String TAG = AppDatabase.class.getSimpleName();

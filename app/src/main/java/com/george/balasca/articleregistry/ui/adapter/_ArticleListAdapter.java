@@ -1,4 +1,4 @@
-package com.george.balasca.articleregistry.ui;
+package com.george.balasca.articleregistry.ui.adapter;
 
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
@@ -16,17 +16,20 @@ import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.model.apiresponse.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
 import com.george.balasca.articleregistry.repository.Status;
+import com.george.balasca.articleregistry.ui.ArticleDetailActivity;
+import com.george.balasca.articleregistry.ui.ArticleDetailFragment;
+import com.george.balasca.articleregistry.ui.ArticleListActivity;
 
 import static com.george.balasca.articleregistry.model.apiresponse.Article.DIFF_CALLBACK;
 
-public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.ViewHolder> {
+public class _ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.ViewHolder> {
 
-    private static final String TAG = ArticleListAdapter.class.getSimpleName();
+    private static final String TAG = _ArticleListAdapter.class.getSimpleName();
     private final ArticleListActivity mParentActivity;
     private final Boolean mTwoPane;
     private NetworkState networkState;
 
-    public ArticleListAdapter(ArticleListActivity parent,  boolean twoPane) {
+    public _ArticleListAdapter(ArticleListActivity parent, boolean twoPane) {
         super(DIFF_CALLBACK);
         mParentActivity = parent;
         mTwoPane = twoPane;
@@ -41,7 +44,7 @@ public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.V
 
         if (viewType == R.layout.article_list_content) {
             view = layoutInflater.inflate(R.layout.article_list_content, parent, false);
-            return new ArticleViewHolder(view);
+            return new mArticleViewHolder(view);
         } else if (viewType == R.layout.network_state_item) {
             view = layoutInflater.inflate(R.layout.network_state_item, parent, false);
             return new NetworkStateItemViewHolder(view);
@@ -55,7 +58,7 @@ public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.V
 
         switch (getItemViewType(position)) {
             case R.layout.article_list_content:
-                ((ArticleViewHolder) holder).bindTo(getItem(position));
+                ((mArticleViewHolder) holder).bindTo(getItem(position));
                 holder.itemView.setOnClickListener(mOnClickListener);
                 break;
             case R.layout.network_state_item:
@@ -73,10 +76,10 @@ public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.V
         }
     }
 
-    static class ArticleViewHolder extends RecyclerView.ViewHolder {
+    static class mArticleViewHolder extends RecyclerView.ViewHolder {
         TextView articleItemView;
 
-        public ArticleViewHolder(View itemView) {
+        public mArticleViewHolder(View itemView) {
             super(itemView);
             articleItemView = itemView.findViewById(R.id.content);
         }
