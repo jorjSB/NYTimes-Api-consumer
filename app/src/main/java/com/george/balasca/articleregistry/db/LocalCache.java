@@ -3,9 +3,8 @@ package com.george.balasca.articleregistry.db;
 import android.arch.paging.DataSource;
 import android.util.Log;
 
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 

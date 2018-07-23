@@ -8,8 +8,9 @@ import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import com.george.balasca.articleregistry.model.NYApiSearchResultObject;
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.AppRepository;
+import com.george.balasca.articleregistry.repository.NetworkState;
 
 public class DBArticleListViewModel extends ViewModel {
     private static final String TAG = DBArticleListViewModel.class.getSimpleName();
@@ -25,7 +26,10 @@ public class DBArticleListViewModel extends ViewModel {
     public LiveData<PagedList<Article>> articlesLiveData;
 
     // get teh Network errors!
-    public LiveData<String> errorsLiveData;
+    public LiveData<NetworkState> networkLoadingStateLiveData;
+
+    // get teh Network errors!
+    public LiveData<String> networkErrorsLiveData;
 
     // constructor, init repo
     public DBArticleListViewModel(@NonNull AppRepository repository) {
@@ -41,11 +45,13 @@ public class DBArticleListViewModel extends ViewModel {
         articlesLiveData = Transformations.switchMap(repositoryResult, object ->
                 object.getArticles());
 
-        errorsLiveData = Transformations.switchMap(repositoryResult, object ->
-                object.getNetworkErrors());
+        networkLoadingStateLiveData = Transformations.switchMap(repositoryResult, object ->
+                object.getLoadingState());
+
+        networkErrorsLiveData = Transformations.switchMap(repositoryResult, object ->
+                object.getNetworkStatus());
 
     }
-
 
     // Search REPO
     public final void searchRepo(@NonNull String queryString) {

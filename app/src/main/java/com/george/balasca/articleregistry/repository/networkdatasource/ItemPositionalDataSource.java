@@ -7,8 +7,8 @@ import android.util.Log;
 
 import com.george.balasca.articleregistry.api.Api;
 import com.george.balasca.articleregistry.api.Service;
-import com.george.balasca.articleregistry.model.apiresponse.ApiResponse;
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.ApiResponse;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
 import com.george.balasca.articleregistry.repository.Status;
 
@@ -34,7 +34,7 @@ public class ItemPositionalDataSource extends PositionalDataSource<Article> {
     private LoadInitialParams initialParams;
 
     public ItemPositionalDataSource(Executor retryExecutor) {
-        service = Api.createService();
+        // service = Api.createService(context);
         networkState = new MutableLiveData();
         initialLoading = new MutableLiveData();
         this.retryExecutor = retryExecutor;

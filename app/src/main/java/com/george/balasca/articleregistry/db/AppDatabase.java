@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.george.balasca.articleregistry.db.helpers.Converters;
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
 
 import java.util.ArrayList;
 import java.util.List;

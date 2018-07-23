@@ -10,7 +10,7 @@ import com.george.balasca.articleregistry.api.Service;
 import com.george.balasca.articleregistry.db.LocalCache;
 import com.george.balasca.articleregistry.model.NYApiSearchResultObject;
 import com.george.balasca.articleregistry.model.ArticleBoundaryCallback;
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
 
 public class AppRepository {
 
@@ -19,6 +19,7 @@ public class AppRepository {
     private Service service;
     private LocalCache cache;
     private LiveData<PagedList<Article>> mPagedListLiveData;
+
 
     public AppRepository(Service service, LocalCache cache) {
         this.service = service;
@@ -39,24 +40,28 @@ public class AppRepository {
         // the list and update the database with extra data
         ArticleBoundaryCallback boundaryCallback = new ArticleBoundaryCallback(q, service, cache);
 
-        PagedList.Config pagedListConfig =
-                (new PagedList.Config.Builder())
-                        .setEnablePlaceholders(true)
-                        .setInitialLoadSizeHint(20)
-                        .setPageSize(20)
-                        .setPrefetchDistance(10)
-                        .build();
+//        PagedList.Config pagedListConfig =
+//                (new PagedList.Config.Builder())
+//                        .setEnablePlaceholders(false)
+//                        .setPageSize(20)
+//                        .build();
 
         // Get the paged list
-        LiveData data = new LivePagedListBuilder(dataSourceFactory, pagedListConfig)
+        LiveData data = new LivePagedListBuilder(dataSourceFactory, 20)
                 .setBoundaryCallback(boundaryCallback)
                 .build();
 
         mPagedListLiveData = data;
 
+        // new object with results - observables
         NYApiSearchResultObject NYApiSearchResultObject = new NYApiSearchResultObject();
+
         NYApiSearchResultObject.setArticles(data);
-//        NYApiSearchResultObject.setNetworkErrors(new ArrayList<String>());
+
+
+        // TODO: set the network state/errors here
+        NYApiSearchResultObject.setLoadingState(boundaryCallback.getNetworkState());
+        NYApiSearchResultObject.setNetworkStatus(boundaryCallback.getNetworkErrors());
 
         return NYApiSearchResultObject;
     }

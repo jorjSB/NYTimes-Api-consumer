@@ -1,6 +1,6 @@
 package com.george.balasca.articleregistry.api;
 
-import com.george.balasca.articleregistry.model.apiresponse.ApiResponse;
+import com.george.balasca.articleregistry.model.modelobjects.ApiResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

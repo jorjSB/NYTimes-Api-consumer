@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
 import com.george.balasca.articleregistry.repository.networkdatasource.ArticleDataSourceFactory;
 import com.george.balasca.articleregistry.repository.networkdatasource.ItemPositionalDataSource;

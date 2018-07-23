@@ -1,5 +1,5 @@
 
-package com.george.balasca.articleregistry.model.apiresponse;
+package com.george.balasca.articleregistry.model.modelobjects;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

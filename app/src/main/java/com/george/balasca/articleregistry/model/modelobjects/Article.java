@@ -1,7 +1,6 @@
 
-package com.george.balasca.articleregistry.model.apiresponse;
+package com.george.balasca.articleregistry.model.modelobjects;
 
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
@@ -53,7 +52,7 @@ public class Article {
 
     @SerializedName("pub_date")
     @Expose
-    private String pubDate;
+    private Date pubDate;
 
     @SerializedName("document_type")
     @Expose
@@ -123,11 +122,11 @@ public class Article {
         this.keywords = keywords;
     }
 
-    public String getPubDate() {
+    public Date getPubDate() {
         return pubDate;
     }
 
-    public void setPubDate(String pubDate) {
+    public void setPubDate(Date pubDate) {
         this.pubDate = pubDate;
     }
 
@@ -167,7 +166,7 @@ public class Article {
     public static DiffUtil.ItemCallback<Article> DIFF_CALLBACK = new DiffUtil.ItemCallback<Article>() {
         @Override
         public boolean areItemsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem.getId().equalsIgnoreCase(newItem.getId());
+            return oldItem.getId().equals(newItem.getId());
         }
 
         @Override

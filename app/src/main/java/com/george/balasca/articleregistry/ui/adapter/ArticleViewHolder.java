@@ -5,7 +5,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.george.balasca.articleregistry.R;
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ArticleViewHolder extends RecyclerView.ViewHolder {
     TextView articleItemView;
@@ -16,6 +20,15 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindTo(Article article) {
-        articleItemView.setText(article.getWebUrl());
+        if(article.getPubDate()!= null) {
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            String text = formatter.format(article.getPubDate());
+            String parsedDate = text;
+
+            articleItemView.setText(article.getWebUrl() + " /n Published at:  " + parsedDate);
+        }else
+            articleItemView.setText(article.getWebUrl() );
+
     }
 }

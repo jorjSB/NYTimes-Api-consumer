@@ -8,19 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.george.balasca.articleregistry.R;
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
-import com.george.balasca.articleregistry.repository.Status;
 import com.george.balasca.articleregistry.ui.ArticleDetailActivity;
 import com.george.balasca.articleregistry.ui.ArticleDetailFragment;
 import com.george.balasca.articleregistry.ui.ArticleListActivity;
 
-import static com.george.balasca.articleregistry.model.apiresponse.Article.DIFF_CALLBACK;
+import static com.george.balasca.articleregistry.model.modelobjects.Article.DIFF_CALLBACK;
 
 public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.ViewHolder> {
 
@@ -103,6 +99,10 @@ public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.V
     };
 
 
+    /**
+     * Add or remove the "loading" item based on the network state
+     * @param newNetworkState
+     */
     public void setNetworkState(NetworkState newNetworkState) {
         NetworkState previousState = this.networkState;
         boolean previousExtraRow = hasExtraRow();

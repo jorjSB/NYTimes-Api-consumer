@@ -1,6 +1,9 @@
 package com.george.balasca.articleregistry.api;
 
+import android.content.Context;
 import android.os.SystemClock;
+
+import com.george.balasca.articleregistry.api.helpers.ConnectivityInterceptor;
 
 import java.io.IOException;
 
@@ -20,7 +23,7 @@ public interface Api {
     String API_KEY = "3baa17f100794f77a741c475c8916700";
     String SORT = "newest";
 
-    public static Service createService() {
+    public static Service createService(Context context) {
         // Logger
         HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
         loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
@@ -50,6 +53,7 @@ public interface Api {
         };
 
         OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new ConnectivityInterceptor(context))
                 .addInterceptor(loggerInterceptor)
                 .addInterceptor(delayInterceptor)
                 .addInterceptor(apiKeyInterceptor)

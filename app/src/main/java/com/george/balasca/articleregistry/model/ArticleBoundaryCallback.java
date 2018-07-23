@@ -1,13 +1,22 @@
 package com.george.balasca.articleregistry.model;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.george.balasca.articleregistry.api.Service;
+import com.george.balasca.articleregistry.api.helpers.ErrorPojoClass;
 import com.george.balasca.articleregistry.db.LocalCache;
-import com.george.balasca.articleregistry.model.apiresponse.ApiResponse;
-import com.george.balasca.articleregistry.model.apiresponse.Article;
+import com.george.balasca.articleregistry.model.modelobjects.ApiResponse;
+import com.george.balasca.articleregistry.model.modelobjects.Article;
+import com.george.balasca.articleregistry.repository.NetworkState;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +37,17 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>
     private Service service;
     private LocalCache cache;
 
+    private MutableLiveData networkState;
+    private MutableLiveData networkErrors;
+
+
     public ArticleBoundaryCallback(String query, Service service, LocalCache cache) {
         this.query = query;
         this.service = service;
         this.cache = cache;
+
+        networkState = new MutableLiveData();
+        networkErrors = new MutableLiveData();
     }
 
     /**
@@ -40,8 +56,8 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>
     @Override
     public void onZeroItemsLoaded(){
         // fetch data from service
-         requestAndSaveData(query);
-        Log.d(TAG , "onZeroItemsLoaded");
+        requestAndSaveData(query);
+//        Log.d(TAG , "onZeroItemsLoaded");
     }
 
     /**
@@ -50,14 +66,17 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>
     @Override
     public void onItemAtEndLoaded(Article article){
         // fetch data from service
-         requestAndSaveData(query);
-        Log.d(TAG , "onItemAtEndLoaded ");
+        requestAndSaveData(query);
+//        Log.d(TAG , "onItemAtEndLoaded ");
     }
 
     /**
      * Request next page from the server and save it into the DB
      */
     private void requestAndSaveData(String query){
+
+
+        networkState.postValue(NetworkState.LOADING);
 
         service.getQueriedArticles(lastRequestedPage, query).enqueue(new Callback<ApiResponse>() {
             @Override
@@ -70,15 +89,27 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>
                     List<Article> articleList = new ArrayList();
                     articleList.addAll( response.body().getResponseBody().getArticleList() );
 
-                     cache.insertAllArticles(articleList);
-//                    callback.onResponseResult(articleList, 0, 10);
+                    cache.insertAllArticles(articleList);
 
-//                    initialLoading.postValue(NetworkState.LOADED);
-//                    networkState.postValue(NetworkState.LOADED);
-                } else {
-                    Log.e("API call failed", response.message());
-//                    initialLoading.postValue(new NetworkState(Status.FAILED, response.message()));
-//                    networkState.postValue(new NetworkState(Status.FAILED, response.message()));
+                    networkState.postValue(NetworkState.LOADED);
+                    // networkErrors.postValue("All GOOD");
+                } else if (!response.isSuccessful()){ // response.code() != 200
+                    Log.e("API call failed", "response.message() " + response.message() );
+                    networkState.postValue(NetworkState.FAILED);
+
+                    // get the exact error from the API response
+                    Gson gson = new GsonBuilder().create();
+                    ErrorPojoClass mError=new ErrorPojoClass();
+                    try {
+                        mError= gson.fromJson(response.errorBody().string(),ErrorPojoClass .class);
+                    } catch (IOException e) {
+                        mError.setMessage("Unknown error");
+                    }
+                    networkErrors.postValue(mError.getErrors() != null ? mError.getErrors() : mError.getMessage() );
+                }else{
+                    Log.e("API call failed", "response.message() " + response.message() );
+                    networkState.postValue(NetworkState.FAILED);
+                    networkErrors.postValue(response.message());
                 }
 
             }
@@ -90,11 +121,20 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>
                 if (t == null) {
                     errorMessage = "Unknown error received!";
                 }
-//                networkState.postValue(new NetworkState(Status.FAILED, errorMessage));
+                networkState.postValue(NetworkState.FAILED);
+                networkErrors.postValue(errorMessage);
+                Log.e("API call failed", "errorMessage: " + errorMessage );
             }
         });
 
     }
 
 
+    public MutableLiveData getNetworkState() {
+        return networkState;
+    }
+
+    public MutableLiveData getNetworkErrors() {
+        return networkErrors;
+    }
 }

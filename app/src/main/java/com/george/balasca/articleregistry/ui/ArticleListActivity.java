@@ -8,7 +8,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
@@ -33,7 +36,8 @@ public class ArticleListActivity extends AppCompatActivity {
     private boolean mTwoPane;
 //    private _APIArticlesViewModel viewModel;
     private DBArticleListViewModel localDBViewModel;
-
+    private View recyclerView;
+    private TextView noResultsPlaceholder;
 
 
     @Override
@@ -44,6 +48,7 @@ public class ArticleListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -65,7 +70,8 @@ public class ArticleListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.article_list);
+        recyclerView = findViewById(R.id.article_list);
+        noResultsPlaceholder = findViewById(R.id.empty_list);
         localDBViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this)).get(DBArticleListViewModel.class);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -89,19 +95,42 @@ public class ArticleListActivity extends AppCompatActivity {
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         ArticleListAdapter articleListAdapter = new ArticleListAdapter(this, mTwoPane);
 
+        // observe the List of articles
         localDBViewModel.articlesLiveData.observe(this, pagedListLiveData ->{
-            if(pagedListLiveData != null)
+
+            if(pagedListLiveData != null) {
+                showListPlaceholder( pagedListLiveData.size() == 0 ? true : false );
                 articleListAdapter.submitList(pagedListLiveData);
+            }
+        });
+
+        // observe the networkState (loading/loaded/error)
+        localDBViewModel.networkLoadingStateLiveData.observe(this, networkStateLiveData ->{
+            articleListAdapter.setNetworkState(networkStateLiveData);
+        });
+
+        // observe the network errors: no internet/error messages from server
+        localDBViewModel.networkErrorsLiveData.observe(this, networkErrorsLiveData ->{
+            showSnack(networkErrorsLiveData);
         });
 
         recyclerView.setAdapter(articleListAdapter);
-
     }
 
-    private void showSnack(NetworkState networkState) {
+    private void showListPlaceholder(boolean showListPlaceholder) {
+        if(showListPlaceholder){
+            recyclerView.setVisibility(View.GONE);
+            noResultsPlaceholder.setVisibility(View.VISIBLE);
+        }else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noResultsPlaceholder.setVisibility(View.GONE);
+        }
+    }
+
+    private void showSnack(String networkErrorsLiveData) {
         Snackbar.make(
                 findViewById(R.id.article_list)
-                , networkState.getMessage(), Snackbar.LENGTH_LONG).show();
+                , networkErrorsLiveData, Snackbar.LENGTH_LONG).show();
     }
 
 
