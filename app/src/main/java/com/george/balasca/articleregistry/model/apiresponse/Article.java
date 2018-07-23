@@ -20,16 +20,12 @@ import java.util.List;
         indices={@Index(value="id")})
 public class Article {
 
-    @NonNull
-    @Expose(deserialize = false)
-    @PrimaryKey(autoGenerate = true)
-    private int storeOrder;
-
-//    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = false)
     @SerializedName("_id")
     @Expose
     @NonNull
     private String id;
+
     @SerializedName("web_url")
     @Expose
     private String webUrl;
@@ -70,16 +66,6 @@ public class Article {
     private String sectionName;
 
     // ************************************************************************************************************************
-
-
-    @NonNull
-    public int getStoreOrder() {
-        return storeOrder;
-    }
-
-    public void setStoreOrder(@NonNull int storeOrder) {
-        this.storeOrder = storeOrder;
-    }
 
     public String getWebUrl() {
         return webUrl;
@@ -181,7 +167,7 @@ public class Article {
     public static DiffUtil.ItemCallback<Article> DIFF_CALLBACK = new DiffUtil.ItemCallback<Article>() {
         @Override
         public boolean areItemsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem.getStoreOrder() == newItem.getStoreOrder();
+            return oldItem.getId().equalsIgnoreCase(newItem.getId());
         }
 
         @Override

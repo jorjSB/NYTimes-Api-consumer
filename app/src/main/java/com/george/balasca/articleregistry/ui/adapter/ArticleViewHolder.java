@@ -8,20 +8,14 @@ import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.model.apiresponse.Article;
 
 public class ArticleViewHolder extends RecyclerView.ViewHolder {
-
-    private final TextView nameTV;
+    TextView articleItemView;
 
     public ArticleViewHolder(View itemView) {
         super(itemView);
-        nameTV = (TextView) itemView.findViewById(R.id.content);
+        articleItemView = itemView.findViewById(R.id.content);
     }
 
     public void bindTo(Article article) {
-        nameTV.setText(article.getWebUrl());
-    }
-
-    void clear() {
-        itemView.invalidate();
-        nameTV.invalidate();
+        articleItemView.setText(article.getWebUrl());
     }
 }

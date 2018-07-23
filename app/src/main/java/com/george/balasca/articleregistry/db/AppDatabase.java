@@ -4,16 +4,19 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.george.balasca.articleregistry.db.helpers.Converters;
 import com.george.balasca.articleregistry.model.apiresponse.Article;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Database(entities = {Article.class}, version = 1, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     private final static String TAG = AppDatabase.class.getSimpleName();

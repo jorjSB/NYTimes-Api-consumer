@@ -10,7 +10,7 @@ import com.george.balasca.articleregistry.model.apiresponse.Article;
  * RepoSearchResult from a search, which contains LiveData<List<Repo>> holding query data,
  * and a LiveData<String> of network error state.
  */
-public class ApiSearchResultObject {
+public class NYApiSearchResultObject {
     private LiveData<PagedList<Article>> articles;
     private LiveData<String> networkErrors;
 

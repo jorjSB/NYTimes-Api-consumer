@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.george.balasca.articleregistry.api.Service;
 import com.george.balasca.articleregistry.db.LocalCache;
-import com.george.balasca.articleregistry.model.ApiSearchResultObject;
+import com.george.balasca.articleregistry.model.NYApiSearchResultObject;
 import com.george.balasca.articleregistry.model.ArticleBoundaryCallback;
 import com.george.balasca.articleregistry.model.apiresponse.Article;
 
@@ -28,7 +28,7 @@ public class AppRepository {
     /**
      * Search - match the query.
      */
-    public ApiSearchResultObject search(String q){
+    public NYApiSearchResultObject search(String q){
         Log.d(TAG, "New query: " + q);
 
         // Get data source factory from the local cache
@@ -41,78 +41,28 @@ public class AppRepository {
 
         PagedList.Config pagedListConfig =
                 (new PagedList.Config.Builder())
-                        .setEnablePlaceholders(false)
+                        .setEnablePlaceholders(true)
                         .setInitialLoadSizeHint(20)
                         .setPageSize(20)
                         .setPrefetchDistance(10)
                         .build();
 
         // Get the paged list
-        LiveData data = new LivePagedListBuilder(dataSourceFactory, 20)
+        LiveData data = new LivePagedListBuilder(dataSourceFactory, pagedListConfig)
                 .setBoundaryCallback(boundaryCallback)
                 .build();
 
         mPagedListLiveData = data;
-//        Log.d(TAG, "Result size: " + mPagedListLiveData.getValue().size());
 
-        ApiSearchResultObject apiSearchResultObject = new ApiSearchResultObject();
-        apiSearchResultObject.setArticles(data);
-//        apiSearchResultObject.setNetworkErrors(new ArrayList<String>());
+        NYApiSearchResultObject NYApiSearchResultObject = new NYApiSearchResultObject();
+        NYApiSearchResultObject.setArticles(data);
+//        NYApiSearchResultObject.setNetworkErrors(new ArrayList<String>());
 
-        return apiSearchResultObject;
+        return NYApiSearchResultObject;
     }
 
     public DataSource.Factory<Integer, Article> getAllArticles(){
-
-//        DataSource.Factory dataSourceFactory = cache.getAllArticles();
-//
-//        LiveData data = new LivePagedListBuilder(dataSourceFactory, 15)
-//                .build();
-
         return cache.getAllArticles();
     }
 
-    public Service getService() {
-        return service;
-    }
-
-    public LocalCache getCache() {
-        return cache;
-    }
-/**
-
-     /**
-     * Search repositories whose names match the query.
-     *
-    fun search(query: String): RepoSearchResult {
-        Log.d("GithubRepository", "New query: $query")
-
-        // Get data source factory from the local cache
-        val dataSourceFactory = cache.reposByName(query)
-
-        // every new query creates a new BoundaryCallback
-        // The BoundaryCallback will observe when the user reaches to the edges of
-        // the list and update the database with extra data
-        val boundaryCallback = RepoBoundaryCallback(query, service, cache)
-        val networkErrors = boundaryCallback.networkErrors
-
-        // Get the paged list
-        val data = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
-                .setBoundaryCallback(boundaryCallback)
-                .build()
-
-        // Get the network errors exposed by the boundary callback
-        return RepoSearchResult(data, networkErrors)
-    }
-     
-     
-     */
-
-//    public DataSource.Factory getAllArticles() {
-//        return cache.getAllArticles();
-//    }
-
-//    public void insertAllArticles(ArrayList<Article> articleList) {
-//        cache.insertAllArticles(articleList);
-//    }
 }

@@ -14,13 +14,13 @@ import com.george.balasca.articleregistry.repository.networkdatasource.ItemPosit
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class APIArticlesViewModel extends ViewModel {
+public class _APIArticlesViewModel extends ViewModel {
     public LiveData<PagedList<Article>> articleList;
     public LiveData<NetworkState> networkState;
     Executor executor;
     LiveData<ItemPositionalDataSource> tDataSource;
 
-    public APIArticlesViewModel(){
+    public _APIArticlesViewModel(){
         executor = Executors.newFixedThreadPool(5);
         ArticleDataSourceFactory articleDataSourceFactory = new ArticleDataSourceFactory(executor);
 

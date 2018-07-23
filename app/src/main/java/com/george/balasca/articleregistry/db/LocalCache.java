@@ -21,27 +21,21 @@ public class LocalCache {
     public LocalCache(AppDatabase appDatabase, Executor ioExecutor) {
         this.articleDao = appDatabase.getArticleDao();
         this.ioExecutor = ioExecutor;
-
-        Log.d(TAG, "New cache created!!");
     }
 
     public void insertAllArticles(List<Article> articleArrayList){
         ioExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "inserting " + articleArrayList.size() + " repos");
+                Log.d(TAG, "Inserting " + articleArrayList.size() + " articles");
                 articleDao.insert(articleArrayList);
             }
         });
     }
 
-    public void otherFunction(ArrayList<Article> articleArrayList){
-        // TODO
-    }
-
     public DataSource.Factory<Integer, Article> getAllArticles() {
-        DataSource.Factory<Integer, Article> test = articleDao.getAllArticles();
-        return test;
+        DataSource.Factory<Integer, Article> articleFactory = articleDao.getAllArticles();
+        return articleFactory;
     }
 
 }

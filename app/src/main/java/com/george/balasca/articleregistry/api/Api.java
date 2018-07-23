@@ -43,7 +43,7 @@ public interface Api {
                 Request request = chain.request();
                 HttpUrl url = request.url().newBuilder()
                         .addQueryParameter("api-key", API_KEY)
-                        .addQueryParameter("sort", SORT).build();
+                        .build();
                 request = request.newBuilder().url(url).build();
                 return chain.proceed(request);
             }

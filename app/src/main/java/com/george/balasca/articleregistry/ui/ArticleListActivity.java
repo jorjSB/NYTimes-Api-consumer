@@ -1,8 +1,6 @@
 package com.george.balasca.articleregistry.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.paging.PagedList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -10,16 +8,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
-import com.george.balasca.articleregistry.model.apiresponse.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
-import com.george.balasca.articleregistry.ui.adapter.DummyPagedListAdapter;
-import com.george.balasca.articleregistry.ui.adapter._ArticleListAdapter;
-import com.george.balasca.articleregistry.ui.viewmodels.APIArticlesViewModel;
+import com.george.balasca.articleregistry.ui.adapter.ArticleListAdapter;
 import com.george.balasca.articleregistry.ui.viewmodels.DBArticleListViewModel;
 
 /**
@@ -37,7 +31,7 @@ public class ArticleListActivity extends AppCompatActivity {
     private final String DEFAULT_QUERY = "Android";
     private String query;
     private boolean mTwoPane;
-//    private APIArticlesViewModel viewModel;
+//    private _APIArticlesViewModel viewModel;
     private DBArticleListViewModel localDBViewModel;
 
 
@@ -82,6 +76,7 @@ public class ArticleListActivity extends AppCompatActivity {
     }
 
     private void initSearch(String query) {
+        // TODO
     }
 
     @Override
@@ -92,16 +87,9 @@ public class ArticleListActivity extends AppCompatActivity {
 
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-
-        // HACK
-//        recyclerView.setItemAnimator(null);
-
-//        _ArticleListAdapter articleListAdapter = new _ArticleListAdapter(this, mTwoPane);
-        DummyPagedListAdapter articleListAdapter = new DummyPagedListAdapter(this);
-
+        ArticleListAdapter articleListAdapter = new ArticleListAdapter(this, mTwoPane);
 
         localDBViewModel.articlesLiveData.observe(this, pagedListLiveData ->{
-            Log.d(TAG, "articlesLiveData.observe size: " + pagedListLiveData.size());
             if(pagedListLiveData != null)
                 articleListAdapter.submitList(pagedListLiveData);
         });

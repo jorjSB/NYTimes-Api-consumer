@@ -22,14 +22,14 @@ import com.george.balasca.articleregistry.ui.ArticleListActivity;
 
 import static com.george.balasca.articleregistry.model.apiresponse.Article.DIFF_CALLBACK;
 
-public class _ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.ViewHolder> {
+public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.ViewHolder> {
 
-    private static final String TAG = _ArticleListAdapter.class.getSimpleName();
+    private static final String TAG = ArticleListAdapter.class.getSimpleName();
     private final ArticleListActivity mParentActivity;
     private final Boolean mTwoPane;
     private NetworkState networkState;
 
-    public _ArticleListAdapter(ArticleListActivity parent, boolean twoPane) {
+    public ArticleListAdapter(ArticleListActivity parent, boolean twoPane) {
         super(DIFF_CALLBACK);
         mParentActivity = parent;
         mTwoPane = twoPane;
@@ -44,7 +44,7 @@ public class _ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.
 
         if (viewType == R.layout.article_list_content) {
             view = layoutInflater.inflate(R.layout.article_list_content, parent, false);
-            return new mArticleViewHolder(view);
+            return new ArticleViewHolder(view);
         } else if (viewType == R.layout.network_state_item) {
             view = layoutInflater.inflate(R.layout.network_state_item, parent, false);
             return new NetworkStateItemViewHolder(view);
@@ -58,7 +58,7 @@ public class _ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.
 
         switch (getItemViewType(position)) {
             case R.layout.article_list_content:
-                ((mArticleViewHolder) holder).bindTo(getItem(position));
+                ((ArticleViewHolder) holder).bindTo(getItem(position));
                 holder.itemView.setOnClickListener(mOnClickListener);
                 break;
             case R.layout.network_state_item:
@@ -76,18 +76,6 @@ public class _ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.
         }
     }
 
-    static class mArticleViewHolder extends RecyclerView.ViewHolder {
-        TextView articleItemView;
-
-        public mArticleViewHolder(View itemView) {
-            super(itemView);
-            articleItemView = itemView.findViewById(R.id.content);
-        }
-
-        public void bindTo(Article article) {
-            articleItemView.setText(article.getWebUrl());
-        }
-    }
 
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -137,43 +125,6 @@ public class _ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.
             return true;
         } else {
             return false;
-        }
-    }
-
-    static class NetworkStateItemViewHolder extends RecyclerView.ViewHolder {
-
-        private final ProgressBar progressBar;
-        private final TextView errorMsg;
-        private Button button;
-
-        public NetworkStateItemViewHolder(View itemView) {
-            super(itemView);
-            progressBar = itemView.findViewById(R.id.progress_bar);
-            errorMsg = itemView.findViewById(R.id.error_msg);
-            button = itemView.findViewById(R.id.retry_button);
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // listItemClickListener.onRetryClick(view, getAdapterPosition());
-                }
-            });
-        }
-
-
-        public void bindView(NetworkState networkState) {
-            if (networkState != null && networkState.getNetworkStatus() == Status.RUNNING) {
-                progressBar.setVisibility(View.VISIBLE);
-            } else {
-                progressBar.setVisibility(View.GONE);
-            }
-
-            if (networkState != null && networkState.getNetworkStatus() == Status.FAILED) {
-                errorMsg.setVisibility(View.VISIBLE);
-                errorMsg.setText(networkState.getMessage());
-            } else {
-                errorMsg.setVisibility(View.GONE);
-            }
         }
     }
 }
