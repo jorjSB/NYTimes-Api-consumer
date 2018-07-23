@@ -1,6 +1,8 @@
 package com.george.balasca.articleregistry.ui;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +15,7 @@ import android.view.View;
 
 import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
+import com.george.balasca.articleregistry.model.apiresponse.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
 import com.george.balasca.articleregistry.ui.adapter.DummyPagedListAdapter;
 import com.george.balasca.articleregistry.ui.adapter._ArticleListAdapter;
@@ -30,9 +33,14 @@ import com.george.balasca.articleregistry.ui.viewmodels.DBArticleListViewModel;
 public class ArticleListActivity extends AppCompatActivity {
 
     private static final String TAG = ArticleListActivity.class.getSimpleName();
+    private final String LAST_SEARCH_QUERY = "last_search_query";
+    private final String DEFAULT_QUERY = "Android";
+    private String query;
     private boolean mTwoPane;
-    private APIArticlesViewModel viewModel;
+//    private APIArticlesViewModel viewModel;
     private DBArticleListViewModel localDBViewModel;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +72,24 @@ public class ArticleListActivity extends AppCompatActivity {
         }
 
         View recyclerView = findViewById(R.id.article_list);
+        localDBViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this)).get(DBArticleListViewModel.class);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
-        localDBViewModel.searchRepo("");
+        query = savedInstanceState != null && savedInstanceState.getString(LAST_SEARCH_QUERY) != null ? savedInstanceState.getString(LAST_SEARCH_QUERY) : DEFAULT_QUERY;
+        localDBViewModel.searchRepo(query);
+        initSearch(query);
     }
+
+    private void initSearch(String query) {
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(LAST_SEARCH_QUERY, localDBViewModel.lastQueryValue());
+    }
+
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
 
@@ -78,7 +99,6 @@ public class ArticleListActivity extends AppCompatActivity {
 //        _ArticleListAdapter articleListAdapter = new _ArticleListAdapter(this, mTwoPane);
         DummyPagedListAdapter articleListAdapter = new DummyPagedListAdapter(this);
 
-        localDBViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this)).get(DBArticleListViewModel.class);
 
         localDBViewModel.articlesLiveData.observe(this, pagedListLiveData ->{
             Log.d(TAG, "articlesLiveData.observe size: " + pagedListLiveData.size());

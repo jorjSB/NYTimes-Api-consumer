@@ -21,6 +21,8 @@ public class LocalCache {
     public LocalCache(AppDatabase appDatabase, Executor ioExecutor) {
         this.articleDao = appDatabase.getArticleDao();
         this.ioExecutor = ioExecutor;
+
+        Log.d(TAG, "New cache created!!");
     }
 
     public void insertAllArticles(List<Article> articleArrayList){
@@ -28,7 +30,7 @@ public class LocalCache {
             @Override
             public void run() {
                 Log.d(TAG, "inserting " + articleArrayList.size() + " repos");
-                articleDao.insertArticles(articleArrayList);
+                articleDao.insert(articleArrayList);
             }
         });
     }
@@ -38,21 +40,8 @@ public class LocalCache {
     }
 
     public DataSource.Factory<Integer, Article> getAllArticles() {
-        return articleDao.getAllArticles();
+        DataSource.Factory<Integer, Article> test = articleDao.getAllArticles();
+        return test;
     }
-
-
-//
-//    /**
-//     * Request a LiveData<List<Repo>> from the Dao, based on a repo name. If the name contains
-//     * multiple words separated by spaces, then we're emulating the GitHub API behavior and allow
-//     * any characters between the words.
-//     * @param name repository name
-//     */
-//    fun reposByName(name: String): DataSource.Factory<Int, Repo> {
-//        // appending '%' so we can allow other characters to be before and after the query string
-//        val query = "%${name.replace(' ', '%')}%"
-//        return repoDao.reposByName(query)
-//    }
 
 }

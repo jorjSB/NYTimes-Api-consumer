@@ -1,6 +1,7 @@
 
 package com.george.balasca.articleregistry.model.apiresponse;
 
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
@@ -11,12 +12,20 @@ import android.support.v7.util.DiffUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
+import java.util.Date;
 import java.util.List;
 
 @Entity(tableName = "article",
         indices={@Index(value="id")})
 public class Article {
-    @PrimaryKey(autoGenerate = false)
+
+    @NonNull
+    @Expose(deserialize = false)
+    @PrimaryKey(autoGenerate = true)
+    private int storeOrder;
+
+//    @PrimaryKey(autoGenerate = false)
     @SerializedName("_id")
     @Expose
     @NonNull
@@ -45,9 +54,11 @@ public class Article {
     @Expose
     @Ignore
     private List<Keyword> keywords = null;
+
     @SerializedName("pub_date")
     @Expose
     private String pubDate;
+
     @SerializedName("document_type")
     @Expose
     private String documentType;
@@ -59,6 +70,16 @@ public class Article {
     private String sectionName;
 
     // ************************************************************************************************************************
+
+
+    @NonNull
+    public int getStoreOrder() {
+        return storeOrder;
+    }
+
+    public void setStoreOrder(@NonNull int storeOrder) {
+        this.storeOrder = storeOrder;
+    }
 
     public String getWebUrl() {
         return webUrl;
@@ -160,12 +181,12 @@ public class Article {
     public static DiffUtil.ItemCallback<Article> DIFF_CALLBACK = new DiffUtil.ItemCallback<Article>() {
         @Override
         public boolean areItemsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem.getId() == newItem.getId();
+            return oldItem.getStoreOrder() == newItem.getStoreOrder();
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem.getWebUrl() == newItem.getWebUrl();
+            return oldItem.getId().equals(newItem.getId()) && oldItem.getWebUrl().equals(newItem.getWebUrl());
         }
     };
 

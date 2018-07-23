@@ -25,3 +25,4 @@ public interface Service {
             @Query("end_date") int end_date,
             @Query("begin_date") int begin_date);
 }
+

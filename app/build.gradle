@@ -32,6 +32,7 @@ ext {
     roomVersion = "1.1.1"
     lifecycleVersion = "1.1.1"
     pagingVersion = "1.0.1"
+
     // from the official F*****G WORKING example
 //    roomVersion = "1.1.0-beta1"
 //    lifecycleVersion = "1.1.1"
@@ -47,6 +48,7 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:${lifecycleVersion}"
+//    implementation "android.arch.lifecycle:runtime:${lifecycleVersion}"
     annotationProcessor "android.arch.lifecycle:compiler:${lifecycleVersion}"
 
     // Paging
@@ -61,6 +63,4 @@ dependencies {
 
     // DB debugger
     debugImplementation "com.amitshekhar.android:debug-db:${dbDebuggerVersion}"
-
-
 }

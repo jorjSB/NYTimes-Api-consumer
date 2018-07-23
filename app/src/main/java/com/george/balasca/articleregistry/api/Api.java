@@ -1,8 +1,6 @@
 package com.george.balasca.articleregistry.api;
 
-import android.appwidget.AppWidgetProviderInfo;
 import android.os.SystemClock;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -13,20 +11,19 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Query;
 
-public class Api {
-    private static final String TAG = Api.class.getSimpleName();
-    private static final String BASE_URL = "https://api.nytimes.com/svc/search/v2/";
-    private static final String API_KEY = "3baa17f100794f77a741c475c8916700";
+public interface Api {
+    String TAG = Api.class.getSimpleName();
+    String BASE_URL = "https://api.nytimes.com/svc/search/v2/";
+    String API_KEY = "3baa17f100794f77a741c475c8916700";
+    String SORT = "newest";
 
     public static Service createService() {
         // Logger
         HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
-        loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
         // Use 1sec between calls to avoid API limit exceeding
         Dispatcher dispatcher = new Dispatcher();
@@ -44,7 +41,9 @@ public class Api {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
-                HttpUrl url = request.url().newBuilder().addQueryParameter("api-key", API_KEY).build();
+                HttpUrl url = request.url().newBuilder()
+                        .addQueryParameter("api-key", API_KEY)
+                        .addQueryParameter("sort", SORT).build();
                 request = request.newBuilder().url(url).build();
                 return chain.proceed(request);
             }

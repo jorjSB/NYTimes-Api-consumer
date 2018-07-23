@@ -22,7 +22,6 @@ import retrofit2.Response;
 public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>{
     private final String TAG = ArticleBoundaryCallback.class.getSimpleName();
 
-    private static int NETWORK_PAGE_SIZE = 20;
     private int lastRequestedPage = 0;
 
     private String query;
@@ -65,13 +64,13 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.code() == 200) {
 
-                    Log.d(TAG, "API call success " + response.body().getResponseBody().getArticleList().size() + " items loaded");
+                    Log.d(TAG, "API call success " + response.body().getResponseBody().getArticleList().size() + " items loaded page: " + lastRequestedPage);
                     lastRequestedPage++;
 
                     List<Article> articleList = new ArrayList();
                     articleList.addAll( response.body().getResponseBody().getArticleList() );
 
-                    cache.insertAllArticles(articleList);
+                     cache.insertAllArticles(articleList);
 //                    callback.onResponseResult(articleList, 0, 10);
 
 //                    initialLoading.postValue(NetworkState.LOADED);
