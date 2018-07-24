@@ -10,15 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.george.balasca.articleregistry.R;
-import com.george.balasca.articleregistry.model.modelobjects.Article;
+import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.repository.NetworkState;
 import com.george.balasca.articleregistry.ui.ArticleDetailActivity;
 import com.george.balasca.articleregistry.ui.ArticleDetailFragment;
 import com.george.balasca.articleregistry.ui.ArticleListActivity;
 
-import static com.george.balasca.articleregistry.model.modelobjects.Article.DIFF_CALLBACK;
+import static com.george.balasca.articleregistry.model.DBCompleteArticle.DIFF_CALLBACK;
 
-public class ArticleListAdapter extends PagedListAdapter<Article, RecyclerView.ViewHolder> {
+public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, RecyclerView.ViewHolder> {
 
     private static final String TAG = ArticleListAdapter.class.getSimpleName();
     private final ArticleListActivity mParentActivity;

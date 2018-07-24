@@ -28,7 +28,7 @@ import retrofit2.Response;
  * This boundary callback gets notified when user reaches to the edges of the list for example when
  * the database cannot provide any more data.
  **/
-public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>{
+public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBCompleteArticle>{
     private final String TAG = ArticleBoundaryCallback.class.getSimpleName();
 
     private int lastRequestedPage = 0;
@@ -64,7 +64,7 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>
      * When all items in the database were loaded, we need to query the backend for more items.
      */
     @Override
-    public void onItemAtEndLoaded(Article article){
+    public void onItemAtEndLoaded(DBCompleteArticle article){
         // fetch data from service
         requestAndSaveData(query);
 //        Log.d(TAG , "onItemAtEndLoaded ");
@@ -89,7 +89,8 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<Article>
                     List<Article> articleList = new ArrayList();
                     articleList.addAll( response.body().getResponseBody().getArticleList() );
 
-                    cache.insertAllArticles(articleList);
+                    // INSERT COMPLETE ARTICLES INTO THE DB
+                     cache.insertAllArticles(articleList);
 
                     networkState.postValue(NetworkState.LOADED);
                     // networkErrors.postValue("All GOOD");

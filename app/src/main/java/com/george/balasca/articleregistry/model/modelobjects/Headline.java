@@ -1,10 +1,35 @@
 
 package com.george.balasca.articleregistry.model.modelobjects;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "headline",
+        foreignKeys = @ForeignKey(entity = Article.class,
+                parentColumns = "id",
+                childColumns = "article_original_id",
+                onDelete = CASCADE),
+        indices = {@Index("article_original_id")})
 public class Headline {
+
+    @Expose(deserialize = false)
+    @NonNull
+    @ColumnInfo(name = "article_original_id")
+    private String article_original_id;
+
+    @Expose(deserialize = false)
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
     @SerializedName("main")
     @Expose
@@ -12,23 +37,28 @@ public class Headline {
     @SerializedName("kicker")
     @Expose
     private String kicker;
-    @SerializedName("content_kicker")
-    @Expose
-    private Object contentKicker;
-    @SerializedName("print_headline")
-    @Expose
-    private Object printHeadline;
-    @SerializedName("name")
-    @Expose
-    private Object name;
-    @SerializedName("seo")
-    @Expose
-    private Object seo;
-    @SerializedName("sub")
-    @Expose
-    private Object sub;
+
 
     // ************************************************************************************************************************
+
+
+    @NonNull
+    public String getArticle_original_id() {
+        return article_original_id;
+    }
+
+    public void setArticle_original_id(@NonNull String article_original_id) {
+        this.article_original_id = article_original_id;
+    }
+
+    @NonNull
+    public int getId() {
+        return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
+    }
 
     public String getMain() {
         return main;
@@ -44,46 +74,6 @@ public class Headline {
 
     public void setKicker(String kicker) {
         this.kicker = kicker;
-    }
-
-    public Object getContentKicker() {
-        return contentKicker;
-    }
-
-    public void setContentKicker(Object contentKicker) {
-        this.contentKicker = contentKicker;
-    }
-
-    public Object getPrintHeadline() {
-        return printHeadline;
-    }
-
-    public void setPrintHeadline(Object printHeadline) {
-        this.printHeadline = printHeadline;
-    }
-
-    public Object getName() {
-        return name;
-    }
-
-    public void setName(Object name) {
-        this.name = name;
-    }
-
-    public Object getSeo() {
-        return seo;
-    }
-
-    public void setSeo(Object seo) {
-        this.seo = seo;
-    }
-
-    public Object getSub() {
-        return sub;
-    }
-
-    public void setSub(Object sub) {
-        this.sub = sub;
     }
 
 }

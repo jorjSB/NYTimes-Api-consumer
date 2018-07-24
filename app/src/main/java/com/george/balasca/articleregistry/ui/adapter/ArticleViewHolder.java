@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.george.balasca.articleregistry.R;
+import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
 
 import java.text.SimpleDateFormat;
@@ -19,16 +20,16 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
         articleItemView = itemView.findViewById(R.id.content);
     }
 
-    public void bindTo(Article article) {
-        if(article.getPubDate()!= null) {
+    public void bindTo(DBCompleteArticle dbCompleteArticle) {
+        if(dbCompleteArticle.article.getPubDate()!= null && dbCompleteArticle.headline.get(0).getMain() != null) {
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-            String text = formatter.format(article.getPubDate());
+            String text = formatter.format(dbCompleteArticle.article.getPubDate());
             String parsedDate = text;
 
-            articleItemView.setText(article.getWebUrl() + " /n Published at:  " + parsedDate);
+            articleItemView.setText(dbCompleteArticle.headline.get(0).getMain() + " /n Published at:  " + parsedDate + "  " + dbCompleteArticle.article.getPubDate());
         }else
-            articleItemView.setText(article.getWebUrl() );
+            articleItemView.setText( dbCompleteArticle.headline.get(0).getMain() );
 
     }
 }

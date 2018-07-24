@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
+import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.model.NYApiSearchResultObject;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.AppRepository;
@@ -23,7 +24,7 @@ public class DBArticleListViewModel extends ViewModel {
     private LiveData<NYApiSearchResultObject> repositoryResult;
 
     // get my Articles!!
-    public LiveData<PagedList<Article>> articlesLiveData;
+    public LiveData<PagedList<DBCompleteArticle>> articlesLiveData;
 
     // get teh Network errors!
     public LiveData<NetworkState> networkLoadingStateLiveData;

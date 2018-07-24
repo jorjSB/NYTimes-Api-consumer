@@ -10,12 +10,15 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.george.balasca.articleregistry.db.helpers.Converters;
+import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
+import com.george.balasca.articleregistry.model.modelobjects.Headline;
+import com.george.balasca.articleregistry.model.modelobjects.Multimedium;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Database(entities = {Article.class}, version = 1, exportSchema = false)
+@Database(entities = {Article.class, Headline.class, Multimedium.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -23,6 +26,9 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase dbInstance;
 
     public abstract ArticleDao getArticleDao();
+    public abstract HeadlineDao getHeadlineDao();
+    public abstract MultimediaDao getMultimediaDao();
+    public abstract DBCompleteArticleDao getDBCompleteArticleDao();
 
 
     public static AppDatabase getDatabase(final Context context) {
@@ -68,16 +74,16 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     }
 
-    public static List<Article> getInitialDummyArticles() {
-        ArrayList<Article> articleArrayList = new ArrayList<>();
-
-        for (int i=0; i < 75; i++){
-            Article article = new Article();
-            article.setId(String.valueOf(i));
-            article.setWebUrl("google.com " + i);
-            articleArrayList.add(article);
-        }
-
-        return articleArrayList;
-    }
+//    public static List<Article> getInitialDummyArticles() {
+//        ArrayList<Article> articleArrayList = new ArrayList<>();
+//
+//        for (int i=0; i < 75; i++){
+//            Article article = new Article();
+//            article.setId(String.valueOf(i));
+//            article.setWebUrl("google.com " + i);
+//            articleArrayList.add(article);
+//        }
+//
+//        return articleArrayList;
+//    }
 }

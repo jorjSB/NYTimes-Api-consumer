@@ -97,7 +97,6 @@ public class ArticleListActivity extends AppCompatActivity {
 
         // observe the List of articles
         localDBViewModel.articlesLiveData.observe(this, pagedListLiveData ->{
-
             if(pagedListLiveData != null) {
                 showListPlaceholder( pagedListLiveData.size() == 0 ? true : false );
                 articleListAdapter.submitList(pagedListLiveData);

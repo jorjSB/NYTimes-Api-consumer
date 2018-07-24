@@ -1,23 +1,42 @@
 
 package com.george.balasca.articleregistry.model.modelobjects;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "multimedia",
+        foreignKeys = @ForeignKey(entity = Article.class,
+                parentColumns = "id",
+                childColumns = "article_original_id",
+                onDelete = CASCADE),
+        indices = {@Index("article_original_id")})
 public class Multimedium {
 
-    @SerializedName("rank")
-    @Expose
-    private Integer rank;
+    @Expose(deserialize = false)
+    @NonNull
+    @ColumnInfo(name = "article_original_id")
+    private String article_original_id;
+
+    @Expose(deserialize = false)
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     @SerializedName("subtype")
     @Expose
     private String subtype;
     @SerializedName("caption")
     @Expose
-    private Object caption;
-    @SerializedName("credit")
-    @Expose
-    private Object credit;
+    private String caption;
     @SerializedName("type")
     @Expose
     private String type;
@@ -30,21 +49,26 @@ public class Multimedium {
     @SerializedName("width")
     @Expose
     private Integer width;
-    @SerializedName("subType")
-    @Expose
-    private String subType;
-    @SerializedName("crop_name")
-    @Expose
-    private Object cropName;
 
     // ************************************************************************************************************************
 
-    public Integer getRank() {
-        return rank;
+
+    @NonNull
+    public String getArticle_original_id() {
+        return article_original_id;
     }
 
-    public void setRank(Integer rank) {
-        this.rank = rank;
+    public void setArticle_original_id(@NonNull String article_original_id) {
+        this.article_original_id = article_original_id;
+    }
+
+    @NonNull
+    public int getId() {
+        return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public String getSubtype() {
@@ -55,20 +79,12 @@ public class Multimedium {
         this.subtype = subtype;
     }
 
-    public Object getCaption() {
+    public String getCaption() {
         return caption;
     }
 
-    public void setCaption(Object caption) {
+    public void setCaption(String caption) {
         this.caption = caption;
-    }
-
-    public Object getCredit() {
-        return credit;
-    }
-
-    public void setCredit(Object credit) {
-        this.credit = credit;
     }
 
     public String getType() {
@@ -102,21 +118,4 @@ public class Multimedium {
     public void setWidth(Integer width) {
         this.width = width;
     }
-
-    public String getSubType() {
-        return subType;
-    }
-
-    public void setSubType(String subType) {
-        this.subType = subType;
-    }
-
-    public Object getCropName() {
-        return cropName;
-    }
-
-    public void setCropName(Object cropName) {
-        this.cropName = cropName;
-    }
-
 }

@@ -12,6 +12,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,12 +20,17 @@ import java.util.List;
         indices={@Index(value="id")})
 public class Article {
 
+    @Ignore
+    ArrayList<Multimedium> multimediaArrayList;
+
+    @Ignore
+    Headline headlineObject;
+
     @PrimaryKey(autoGenerate = false)
     @SerializedName("_id")
     @Expose
     @NonNull
     private String id;
-
     @SerializedName("web_url")
     @Expose
     private String webUrl;
@@ -45,15 +51,9 @@ public class Article {
     @Expose
     @Ignore
     private Headline headline;
-    @SerializedName("keywords")
-    @Expose
-    @Ignore
-    private List<Keyword> keywords = null;
-
     @SerializedName("pub_date")
     @Expose
     private Date pubDate;
-
     @SerializedName("document_type")
     @Expose
     private String documentType;
@@ -112,14 +112,6 @@ public class Article {
 
     public void setHeadline(Headline headline) {
         this.headline = headline;
-    }
-
-    public List<Keyword> getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(List<Keyword> keywords) {
-        this.keywords = keywords;
     }
 
     public Date getPubDate() {

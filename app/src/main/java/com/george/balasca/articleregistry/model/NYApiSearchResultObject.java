@@ -12,17 +12,17 @@ import com.george.balasca.articleregistry.repository.NetworkState;
  * and a LiveData<String> of network error state.
  */
 public class NYApiSearchResultObject {
-    private LiveData<PagedList<Article>> articles;
+    private LiveData<PagedList<DBCompleteArticle>> articles;
     private LiveData<NetworkState> loadingState;
     private LiveData<String> networkStatus;
 
 
 
-    public LiveData<PagedList<Article>> getArticles() {
+    public LiveData<PagedList<DBCompleteArticle>> getArticles() {
         return articles;
     }
 
-    public void setArticles(LiveData<PagedList<Article>> articles) {
+    public void setArticles(LiveData<PagedList<DBCompleteArticle>> articles) {
         this.articles = articles;
     }
 

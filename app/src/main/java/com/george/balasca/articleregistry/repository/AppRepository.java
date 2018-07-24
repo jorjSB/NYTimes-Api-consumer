@@ -33,7 +33,7 @@ public class AppRepository {
         Log.d(TAG, "New query: " + q);
 
         // Get data source factory from the local cache
-        DataSource.Factory dataSourceFactory = cache.getAllArticles();
+        DataSource.Factory dataSourceFactory = cache.getDBCompleteArticleDao();
 
         // every new query creates a new BoundaryCallback
         // The BoundaryCallback will observe when the user reaches to the edges of
