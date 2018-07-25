@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.widget.SearchView;
 import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.model.SearchQueryPOJO;
+import com.george.balasca.articleregistry.repository.NetworkState;
 import com.george.balasca.articleregistry.ui.adapter.ArticleListAdapter;
 import com.george.balasca.articleregistry.ui.viewmodels.DBArticleListViewModel;
 
@@ -119,6 +121,8 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
 
     // make an api call with a new query term, no filters
     private void initNewAPISearch(String searchString) {
+        initSearchObservables();
+
         SearchQueryPOJO newSearchQueryPOJO = new SearchQueryPOJO();
         newSearchQueryPOJO.setQuery(searchString);
         showSnack(getResources().getString(R.string.searching_for_hint) + " " + searchString);
@@ -127,6 +131,8 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
 
     // make an api call that returns the latest articles(no query, no filters)
     private void initNewAPILatestArticleSearch() {
+        initSearchObservables();
+
         SearchQueryPOJO newSearchQueryPOJO = new SearchQueryPOJO();
         newSearchQueryPOJO.setSort("newest");
         showSnack(getResources().getString(R.string.latest_articles_hint));
@@ -150,11 +156,15 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
     }
 
     private void initSearchObservables(){
+        // remove other observers so it won't mess my list
+        localDBViewModel.getfavouritesDBCompleteArticle().removeObservers(this);
+        fab.setVisibility(View.VISIBLE);
+
         // observe the List of articles
         localDBViewModel.articlesLiveData.observe(this, pagedListLiveData ->{
             if(pagedListLiveData != null) {
-                showListPlaceholder( pagedListLiveData.size() == 0 ? true : false );
                 articleListAdapter.submitList(pagedListLiveData);
+                showListPlaceholder( pagedListLiveData.size() == 0 ? true : false );
             }
         });
 
@@ -172,11 +182,24 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
             // remove the data so it won't show on config changes
             localDBViewModel.networkErrorsLiveData.getValue().clear();
         });
+    }
 
-//        if(localDBViewModel.articlesLiveData.getValue() != null)
-//            Toast.makeText(this, query + " adapter items: " + localDBViewModel.articlesLiveData.getValue().size() , Toast.LENGTH_SHORT).show();
-//        else
-//            Toast.makeText(this, "localDBViewModel.articlesLiveData EMPTY" , Toast.LENGTH_SHORT).show();
+    private void initFavouritesObservable() {
+        // remove other observers so it won't mess my list
+        localDBViewModel.articlesLiveData.removeObservers(this);
+        localDBViewModel.networkLoadingStateLiveData.removeObservers(this);
+        localDBViewModel.networkErrorsLiveData.removeObservers(this);
+        articleListAdapter.setNetworkState(NetworkState.LOADED);
+        fab.setVisibility(View.GONE);
+
+        // observe the List of articles
+        localDBViewModel.getfavouritesDBCompleteArticle().observe(this, pagedListLiveData ->{
+            if(pagedListLiveData != null) {
+                Log.d(TAG, "Favourited items: " + pagedListLiveData.size());
+                articleListAdapter.submitList(pagedListLiveData);
+                showListPlaceholder( pagedListLiveData.size() == 0 ? true : false );
+            }
+        });
     }
 
     private void showListPlaceholder(boolean showListPlaceholder) {
@@ -248,7 +271,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
                 initNewAPILatestArticleSearch();
                 return true;
             case R.id.app_bar_favourites:
-                // TODO: favourite list!
+                initFavouritesObservable();
                 showSnack(getResources().getString(R.string.showing_favourite_articles_hint));
                 return true;
             case R.id.app_bar_filter:
@@ -258,7 +281,6 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     @Override

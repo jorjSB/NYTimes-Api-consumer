@@ -21,8 +21,12 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface DBCompleteArticleDao {
 
     @Transaction
-    @Query("SELECT * FROM article")
-    DataSource.Factory<Integer, DBCompleteArticle> getDBCompleteArticles();
+    @Query("SELECT * FROM article WHERE isFavourite != 1")
+    DataSource.Factory<Integer, DBCompleteArticle> getDBCompleteArticlesWithoutFavourites();
+
+    @Transaction
+    @Query("SELECT * FROM article WHERE isFavourite == 1")
+    DataSource.Factory<Integer, DBCompleteArticle> getFavouritesDBCompleteArticles();
 
     @Transaction
     @Query("SELECT * FROM article WHERE id=:article_id LIMIT 1")

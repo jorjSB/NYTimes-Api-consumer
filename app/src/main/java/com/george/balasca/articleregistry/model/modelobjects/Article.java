@@ -26,6 +26,10 @@ public class Article {
     @Ignore
     Headline headlineObject;
 
+
+    @Expose(deserialize = false)
+    private Boolean isFavourite;
+
     @PrimaryKey(autoGenerate = false)
     @SerializedName("_id")
     @Expose
@@ -72,6 +76,14 @@ public class Article {
 
     public void setWebUrl(String webUrl) {
         this.webUrl = webUrl;
+    }
+
+    public Boolean getFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(Boolean favourite) {
+        isFavourite = favourite;
     }
 
     public String getSnippet() {

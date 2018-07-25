@@ -41,6 +41,8 @@ public class LocalCache {
 
         // parse here the lists from my complete list!!!
         for (Article article : articleArrayList){
+            // hack to set the isfavourite field to 0, else Room doesn't know how to delete it... wtf..
+            article.setFavourite(false);
             // set Headline and add to list of headlines
             article.getHeadline().setArticle_original_id(article.getId());
             headlineArrayList.add(article.getHeadline());
@@ -57,11 +59,11 @@ public class LocalCache {
                 appDatabase.runInTransaction(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "Inserting " + articleArrayList.size() + " articles");
+                        // Log.d(TAG, "Inserting " + articleArrayList.size() + " articles");
                         articleDao.insert(articleArrayList);
-                        Log.d(TAG, "Inserting " + multimediaArrayList.size() + " multimedia");
+                        // Log.d(TAG, "Inserting " + multimediaArrayList.size() + " multimedia");
                         multimediaDao.insert(multimediaArrayList);
-                        Log.d(TAG, "Inserting " + headlineArrayList.size() + " headliness");
+                        // Log.d(TAG, "Inserting " + headlineArrayList.size() + " headliness");
                         headlineDao.insert(headlineArrayList);
                     }
                 });
@@ -75,8 +77,13 @@ public class LocalCache {
         return articleFactory;
     }
 
-    public DataSource.Factory<Integer, DBCompleteArticle> getDBCompleteArticleDao() {
-        DataSource.Factory<Integer, DBCompleteArticle> dbCompleteArticleFactory = dbCompleteArticleDao.getDBCompleteArticles();
+    public DataSource.Factory<Integer, DBCompleteArticle> getDBCompleteArticles() {
+        DataSource.Factory<Integer, DBCompleteArticle> dbCompleteArticleFactory = dbCompleteArticleDao.getDBCompleteArticlesWithoutFavourites();
+        return dbCompleteArticleFactory;
+    }
+
+    public DataSource.Factory<Integer, DBCompleteArticle> getfavouritesDBCompleteArticle() {
+        DataSource.Factory<Integer, DBCompleteArticle> dbCompleteArticleFactory = dbCompleteArticleDao.getFavouritesDBCompleteArticles();
         return dbCompleteArticleFactory;
     }
 
@@ -88,7 +95,18 @@ public class LocalCache {
         ioExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                articleDao.deleteAll();
+                int noOfDeletedArticles =  articleDao.deleteAllExceptFavourites();
+                Log.d(TAG, "Deleted: " + noOfDeletedArticles + " articles");
+            }
+        });
+    }
+
+    public void setArticleFavouriteState(Boolean isFavourite, String articleId) {
+        ioExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                int setFavourite = articleDao.setArticleFavouriteState(isFavourite, articleId);
+                Log.d(TAG, "Switched fav. state to " + isFavourite + ": " + setFavourite);
             }
         });
     }

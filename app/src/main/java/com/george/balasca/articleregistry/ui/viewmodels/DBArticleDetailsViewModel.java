@@ -43,4 +43,9 @@ public class DBArticleDetailsViewModel extends ViewModel {
         this.queryLiveData.postValue(queryString);
     }
 
+    // Update article fav/not favourite
+    public final void setArticleFavouriteState(@NonNull Boolean isFavourite, String articleId) {
+        repository.setArticleFavouriteState(isFavourite, articleId);
+    }
+
 }

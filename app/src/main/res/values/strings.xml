@@ -23,4 +23,8 @@
     <string name="latest_articles_hint">Loading latest articles</string>
     <string name="showing_favourite_articles_hint">Loading favourite articles</string>
     <string name="dismiss_snackbar">Dismiss</string>
+    <string name="added_to_fav_prefix">Successfully added&#160;</string>
+    <string name="added_to_fav_suffix">&#160;to your favourite list</string>
+    <string name="removed_from_fav_prefix">Successfully removed&#160;</string>
+    <string name="removed_from_fav_suffix">&#160;from your favourite list</string>
 </resources>

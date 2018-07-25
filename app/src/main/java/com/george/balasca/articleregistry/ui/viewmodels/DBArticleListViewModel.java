@@ -29,6 +29,9 @@ public class DBArticleListViewModel extends ViewModel {
     // get my Articles!!
     public LiveData<PagedList<DBCompleteArticle>> articlesLiveData;
 
+    // get my fav. Articles!!
+    public LiveData<PagedList<DBCompleteArticle>> favouriteArticlesLiveData;
+
     // get teh Network errors!
     public LiveData<NetworkState> networkLoadingStateLiveData;
 
@@ -65,5 +68,9 @@ public class DBArticleListViewModel extends ViewModel {
     // LAST Query string used
     public final SearchQueryPOJO lastQueryValue() {
         return this.queryLiveData.getValue();
+    }
+
+    public final LiveData<PagedList<DBCompleteArticle>> getfavouritesDBCompleteArticle(){
+        return repository.getfavouritesDBCompleteArticle();
     }
 }

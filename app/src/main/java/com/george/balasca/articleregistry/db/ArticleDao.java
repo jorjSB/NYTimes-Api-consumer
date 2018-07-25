@@ -26,18 +26,25 @@ public interface ArticleDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertArticles(List<Article> articles);
 
-
     @Delete
     void delete(Article... articles);
 
     @Query("DELETE FROM article")
     void deleteAll();
 
+    @Query("DELETE FROM article WHERE isFavourite == 0")
+    int deleteAllExceptFavourites();
+
     @Query("SELECT * FROM article")
     List<Article> getArticles();
 
     @Query("SELECT * FROM article")
     DataSource.Factory<Integer, Article> getAllArticles();
+
+    // update individual flag for an article(is/is not Favourite)
+    @Query("UPDATE article SET isFavourite = :favourite WHERE id = :articleId")
+    int setArticleFavouriteState(Boolean favourite, String articleId);
+
 
 //    @RawQuery(observedEntities = Article.class)
 //    DataSource.Factory<Integer, Article> getAllArticlesOrdered(SupportSQLiteQuery query);

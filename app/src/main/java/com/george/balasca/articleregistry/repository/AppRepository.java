@@ -21,11 +21,16 @@ public class AppRepository {
     private Service service;
     private LocalCache cache;
     private LiveData<PagedList<Article>> mPagedListLiveData;
-
+    private LiveData<PagedList<DBCompleteArticle>> liveFavouriteArticlesList;
 
     public AppRepository(Service service, LocalCache cache) {
         this.service = service;
         this.cache = cache;
+
+        DataSource.Factory dataSourceFactory = cache.getfavouritesDBCompleteArticle();
+        LiveData data = new LivePagedListBuilder(dataSourceFactory, 20)
+                .build();
+        liveFavouriteArticlesList = data;
     }
 
     /**
@@ -39,7 +44,7 @@ public class AppRepository {
         cache.deleteObsoleteArticles();
 
         // Get data source factory from the local cache
-        DataSource.Factory dataSourceFactory = cache.getDBCompleteArticleDao();
+        DataSource.Factory dataSourceFactory = cache.getDBCompleteArticles();
 
         // every new query creates a new BoundaryCallback
         // The BoundaryCallback will observe when the user reaches to the edges of
@@ -71,4 +76,12 @@ public class AppRepository {
         return cache.findDBCompleteArticleById(id);
     }
 
+    // get live paged list with favourite articles from the DB
+    public LiveData<PagedList<DBCompleteArticle>> getfavouritesDBCompleteArticle(){
+        return liveFavouriteArticlesList;
+    }
+
+    public void setArticleFavouriteState(Boolean isFavourite, String articleId) {
+        cache.setArticleFavouriteState(isFavourite, articleId);
+    }
 }
