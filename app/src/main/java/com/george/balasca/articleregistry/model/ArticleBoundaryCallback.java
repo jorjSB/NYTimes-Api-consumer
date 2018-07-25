@@ -3,7 +3,6 @@ package com.george.balasca.articleregistry.model;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.george.balasca.articleregistry.api.Service;
 import com.george.balasca.articleregistry.api.helpers.ErrorPojoClass;
@@ -13,8 +12,6 @@ import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,7 +72,6 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
      */
     private void requestAndSaveData(SearchQueryPOJO searchQueryPOJO){
 
-
         networkState.postValue(NetworkState.LOADING);
 
         service.getQueriedFilteredArticles(lastRequestedPage,
@@ -98,7 +94,6 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
                      cache.insertAllArticles(articleList);
 
                     networkState.postValue(NetworkState.LOADED);
-                    // networkErrors.postValue("All GOOD");
                 } else if (!response.isSuccessful()){ // response.code() != 200
                     Log.e("API call failed", "response.message() " + response.message() );
                     networkState.postValue(NetworkState.FAILED);
@@ -106,16 +101,29 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
                     // get the exact error from the API response
                     Gson gson = new GsonBuilder().create();
                     ErrorPojoClass mError=new ErrorPojoClass();
+                    ArrayList<String> errorsArray = new ArrayList<String>();
+
                     try {
                         mError= gson.fromJson(response.errorBody().string(),ErrorPojoClass.class);
                     } catch (IOException e) {
                         mError.setMessage("Unknown error");
                     }
-                    networkErrors.postValue(mError.getErrors() != null ? mError.getErrors() : mError.getMessage() );
+
+                    // in case it's the "message" error returned
+                    if(mError.getMessage() != null) {
+                        errorsArray.add(mError.getMessage());
+                        mError.setErrors(errorsArray);
+                    }
+
+                    if(mError.getErrors() != null && mError.getErrors().size() > 0)
+                        networkErrors.postValue(mError.getErrors());
                 }else{
                     Log.e("API call failed", "response.message() " + response.message() );
                     networkState.postValue(NetworkState.FAILED);
-                    networkErrors.postValue(response.message());
+
+                    ArrayList<String> errors = new ArrayList<String>();
+                    errors.add(response.message());
+                    networkErrors.postValue(errors);
                 }
 
             }
@@ -128,8 +136,10 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
                     errorMessage = "Unknown error received!";
                 }
                 networkState.postValue(NetworkState.FAILED);
-                networkErrors.postValue(errorMessage);
-                Log.e("API call failed", "errorMessage: " + errorMessage );
+
+                ArrayList<String> errors = new ArrayList<String>();
+                errors.add(errorMessage);
+                networkErrors.postValue(errors);
             }
         });
 

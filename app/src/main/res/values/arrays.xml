@@ -6,6 +6,7 @@
     </string-array>
 
     <string-array name="news_desk_filters">
+        <item>@string/news_desk_0</item>
         <item>@string/news_desk_1</item>
         <item>@string/news_desk_2</item>
         <item>@string/news_desk_3</item>
@@ -60,4 +61,5 @@
     <string name="news_desk_24">Personal Investing</string>
     <string name="news_desk_25">Sports</string>
     <string name="news_desk_26">Workplace</string>
+    <string name="news_desk_0">Choose category</string>
 </resources>

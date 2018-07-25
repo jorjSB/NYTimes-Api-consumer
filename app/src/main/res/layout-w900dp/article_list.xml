@@ -36,12 +36,7 @@
             tools:context="com.george.balasca.articleregistry.ui.ArticleListActivity"
             tools:listitem="@layout/article_list_content" />
 
-        <TextView android:id="@+id/empty_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/no_results"
-            android:visibility="gone" />
+        <include layout="@layout/no_list_content_placeholder" />
 
     </FrameLayout>
 
