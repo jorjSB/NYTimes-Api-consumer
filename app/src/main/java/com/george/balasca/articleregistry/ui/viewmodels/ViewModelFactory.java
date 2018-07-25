@@ -21,6 +21,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(DBArticleListViewModel.class)) {
             return (T) new DBArticleListViewModel(this.repository);
+        } else if(modelClass.isAssignableFrom(DBArticleDetailsViewModel.class)){
+            return (T) new DBArticleDetailsViewModel(this.repository);
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

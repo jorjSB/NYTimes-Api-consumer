@@ -33,7 +33,7 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
 
     private int lastRequestedPage = 0;
 
-    private String query;
+    private SearchQueryPOJO searchQueryPOJO;
     private Service service;
     private LocalCache cache;
 
@@ -41,8 +41,8 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
     private MutableLiveData networkErrors;
 
 
-    public ArticleBoundaryCallback(String query, Service service, LocalCache cache) {
-        this.query = query;
+    public ArticleBoundaryCallback(SearchQueryPOJO _searchQueryPOJO, Service service, LocalCache cache) {
+        this.searchQueryPOJO = _searchQueryPOJO;
         this.service = service;
         this.cache = cache;
 
@@ -56,7 +56,7 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
     @Override
     public void onZeroItemsLoaded(){
         // fetch data from service
-        requestAndSaveData(query);
+        requestAndSaveData(searchQueryPOJO);
 //        Log.d(TAG , "onZeroItemsLoaded");
     }
 
@@ -66,19 +66,24 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
     @Override
     public void onItemAtEndLoaded(DBCompleteArticle article){
         // fetch data from service
-        requestAndSaveData(query);
+        requestAndSaveData(searchQueryPOJO);
 //        Log.d(TAG , "onItemAtEndLoaded ");
     }
 
     /**
      * Request next page from the server and save it into the DB
      */
-    private void requestAndSaveData(String query){
+    private void requestAndSaveData(SearchQueryPOJO searchQueryPOJO){
 
 
         networkState.postValue(NetworkState.LOADING);
 
-        service.getQueriedArticles(lastRequestedPage, query).enqueue(new Callback<ApiResponse>() {
+        service.getQueriedFilteredArticles(lastRequestedPage,
+                searchQueryPOJO.getQuery(),
+                searchQueryPOJO.getCategory(),
+                searchQueryPOJO.getSort(),
+                searchQueryPOJO.getBegin_date(),
+                searchQueryPOJO.getEnd_date()).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.code() == 200) {
@@ -102,7 +107,7 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
                     Gson gson = new GsonBuilder().create();
                     ErrorPojoClass mError=new ErrorPojoClass();
                     try {
-                        mError= gson.fromJson(response.errorBody().string(),ErrorPojoClass .class);
+                        mError= gson.fromJson(response.errorBody().string(),ErrorPojoClass.class);
                     } catch (IOException e) {
                         mError.setMessage("Unknown error");
                     }

@@ -1,66 +1,62 @@
 package com.george.balasca.articleregistry.ui;
 
+import android.app.IntentService;
+import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
-import com.george.balasca.articleregistry.repository.NetworkState;
+import com.george.balasca.articleregistry.model.SearchQueryPOJO;
 import com.george.balasca.articleregistry.ui.adapter.ArticleListAdapter;
 import com.george.balasca.articleregistry.ui.viewmodels.DBArticleListViewModel;
 
-/**
- * An activity representing a list of Article. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link ArticleDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
-public class ArticleListActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class ArticleListActivity extends AppCompatActivity implements FilterDialogFragment.OnFiltersSetListener {
 
     private static final String TAG = ArticleListActivity.class.getSimpleName();
     private final String LAST_SEARCH_QUERY = "last_search_query";
-    private final String DEFAULT_QUERY = "Android";
-    private String query;
+    private final SearchQueryPOJO DEFAULT_QUERY = new SearchQueryPOJO();
+    private SearchQueryPOJO query = new SearchQueryPOJO();
     private boolean mTwoPane;
-//    private _APIArticlesViewModel viewModel;
     private DBArticleListViewModel localDBViewModel;
-    private View recyclerView;
-    private TextView noResultsPlaceholder;
+    private ArticleListAdapter articleListAdapter;
+    @BindView(R.id.article_list)  RecyclerView recyclerView;
+    @BindView(R.id.empty_list)  TextView noResultsPlaceholder;
+    @BindView(R.id.fab)  FloatingActionButton fab;
+    @BindView(R.id.toolbar)  Toolbar toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
+        ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Inserting mock data into the DB", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                // localDBViewModel.insertDummyArticlesIntoDB();
-            }
-        });
 
         if (findViewById(R.id.article_detail_container) != null) {
             // The detail container view will be present only in the
@@ -68,36 +64,79 @@ public class ArticleListActivity extends AppCompatActivity {
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
-        }
+            // using it from this activity only in 2-pane mode
+            fab.setVisibility(View.VISIBLE);
+        }else
+            fab.setVisibility(View.GONE);
 
-        recyclerView = findViewById(R.id.article_list);
-        noResultsPlaceholder = findViewById(R.id.empty_list);
+        // get the VM for this activity
         localDBViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this)).get(DBArticleListViewModel.class);
         assert recyclerView != null;
+
+
+        /** INIT MY OBJECTS: adapter, observables etc.. */
+
+        // setup the List, add observables etc..
         setupRecyclerView((RecyclerView) recyclerView);
 
-        query = savedInstanceState != null && savedInstanceState.getString(LAST_SEARCH_QUERY) != null ? savedInstanceState.getString(LAST_SEARCH_QUERY) : DEFAULT_QUERY;
-        localDBViewModel.searchRepo(query);
-        initSearch(query);
+        // init search observables
+        initSearchObservables();
+
+        // init DB observable
+        // TODO: init an observable that doesn't need changes to observe the DB
+
+
+        // handle searches/initial data
+        query = savedInstanceState != null && savedInstanceState.getSerializable(LAST_SEARCH_QUERY) != null ?
+                (SearchQueryPOJO) savedInstanceState.getSerializable(LAST_SEARCH_QUERY)
+                : DEFAULT_QUERY;
+
+
+        Intent intent = getIntent();
+        // get the NEW search query, INIT SEARCH (delete old data)
+        if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
+            String searchString = getIntent().getStringExtra(SearchManager.QUERY);
+            // reset the intent, so it won't be triggered on every orientation change etc.. we need it only once
+            getIntent().removeExtra(SearchManager.QUERY);
+            getIntent().removeExtra(SearchManager.APP_DATA);
+
+            if(searchString != null) {
+                query.setQuery(searchString);
+                initNewSearch(searchString);
+            }
+        }
     }
 
-    private void initSearch(String query) {
-        // TODO
+    private void initNewSearch(String searchString) {
+        SearchQueryPOJO newSearchQueryPOJO = new SearchQueryPOJO();
+        newSearchQueryPOJO.setQuery(searchString);
+        showSnack(getResources().getString(R.string.searching_for_hint) + " " + searchString);
+        searchArticles(newSearchQueryPOJO);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(LAST_SEARCH_QUERY, localDBViewModel.lastQueryValue());
+    private void showSearchDialogFragment() {
+        FragmentManager fm = this.getSupportFragmentManager();
+        FilterDialogFragment dialog = FilterDialogFragment.newInstance();
+
+        dialog.show(fm, "search_dialog_fragment");
+
     }
 
+    private void searchArticles(SearchQueryPOJO searchQueryPOJO) {
+        Log.d(TAG, "searchArticles(String query) " + query.getQuery());
+        localDBViewModel.searchArticle(searchQueryPOJO);
+    }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        ArticleListAdapter articleListAdapter = new ArticleListAdapter(this, mTwoPane);
+        articleListAdapter = new ArticleListAdapter(this, mTwoPane);
+        recyclerView.setAdapter(articleListAdapter);
+    }
 
+    private void initSearchObservables(){
         // observe the List of articles
         localDBViewModel.articlesLiveData.observe(this, pagedListLiveData ->{
             if(pagedListLiveData != null) {
+                Toast.makeText(this, "observe pagedListLiveData.size() " + pagedListLiveData.size(), Toast.LENGTH_LONG).show();
                 showListPlaceholder( pagedListLiveData.size() == 0 ? true : false );
                 articleListAdapter.submitList(pagedListLiveData);
             }
@@ -110,10 +149,15 @@ public class ArticleListActivity extends AppCompatActivity {
 
         // observe the network errors: no internet/error messages from server
         localDBViewModel.networkErrorsLiveData.observe(this, networkErrorsLiveData ->{
-            showSnack(networkErrorsLiveData);
+            for (String error: networkErrorsLiveData) {
+                showSnack(error);
+            }
         });
 
-        recyclerView.setAdapter(articleListAdapter);
+        if(localDBViewModel.articlesLiveData.getValue() != null)
+            Toast.makeText(this, query + " adapter items: " + localDBViewModel.articlesLiveData.getValue().size() , Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "localDBViewModel.articlesLiveData EMPTY" , Toast.LENGTH_SHORT).show();
     }
 
     private void showListPlaceholder(boolean showListPlaceholder) {
@@ -127,10 +171,74 @@ public class ArticleListActivity extends AppCompatActivity {
     }
 
     private void showSnack(String networkErrorsLiveData) {
-        Snackbar.make(
-                findViewById(R.id.article_list)
-                , networkErrorsLiveData, Snackbar.LENGTH_LONG).show();
+        Snackbar.make( findViewById(R.id.article_list), networkErrorsLiveData, Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(LAST_SEARCH_QUERY, localDBViewModel.lastQueryValue());
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.article_list_menu, menu);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(true);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.app_bar_search:  //handled by the searchView
+                return true;
+            case R.id.app_bar_newest:
+                // TODO: latest articles!
+                showSnack(getResources().getString(R.string.latest_articles_hint));
+                return true;
+            case R.id.app_bar_favourites:
+                // TODO: favourite list!
+                showSnack(getResources().getString(R.string.showing_favourite_articles_hint));
+                return true;
+            case R.id.app_bar_filter:
+                showSearchDialogFragment();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onFiltersSet(String beginDate, String endDate, String sort, String category) {
+        SearchQueryPOJO newFilteredSearch = new SearchQueryPOJO();
+        newFilteredSearch.setQuery(query.getQuery());
+        if(!beginDate.isEmpty()) newFilteredSearch.setBegin_date(beginDate);
+        if(!endDate.isEmpty()) newFilteredSearch.setEnd_date(endDate);
+        newFilteredSearch.setSort(sort.toLowerCase());
+        newFilteredSearch.setCategory(category);
+
+        searchArticles(newFilteredSearch);
+    }
 }

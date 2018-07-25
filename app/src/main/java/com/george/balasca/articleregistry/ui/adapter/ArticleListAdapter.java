@@ -55,13 +55,15 @@ public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, Recy
         switch (getItemViewType(position)) {
             case R.layout.article_list_content:
                 ((ArticleViewHolder) holder).bindTo(getItem(position));
-                holder.itemView.setOnClickListener(mOnClickListener);
+                holder.itemView.setOnClickListener( setOnViewClickListener(getItem(position)) );
                 break;
             case R.layout.network_state_item:
                 ((NetworkStateItemViewHolder) holder).bindView(networkState);
                 break;
         }
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
@@ -73,30 +75,56 @@ public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, Recy
     }
 
 
+    private final View.OnClickListener setOnViewClickListener(DBCompleteArticle item) {
 
-    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (mTwoPane) {
-                Bundle arguments = new Bundle();
-
-                // arguments.putString(ArticleDetailFragment.ARG_ITEM_ID, item.id);
-
-                ArticleDetailFragment fragment = new ArticleDetailFragment();
-                fragment.setArguments(arguments);
-                mParentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.article_detail_container, fragment)
-                        .commit();
-            } else {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, ArticleDetailActivity.class);
-
-                // intent.putExtra(ArticleDetailFragment.ARG_ITEM_ID, item.id);
-
-                context.startActivity(intent);
+        View.OnClickListener mOnClickListener = new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (mTwoPane) {
+                    Bundle arguments = new Bundle();
+                    arguments.putString(ArticleDetailFragment.ARG_ITEM_ID, item.article.getId());
+                    ArticleDetailFragment fragment = new ArticleDetailFragment();
+                    fragment.setArguments(arguments);
+                    mParentActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.article_detail_container, fragment)
+                            .commit();
+                } else {
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, ArticleDetailActivity.class);
+                    intent.putExtra(ArticleDetailFragment.ARG_ITEM_ID, item.article.getId());
+                    context.startActivity(intent);
+                }
             }
-        }
-    };
+        };
+
+        return mOnClickListener;
+
+    }
+
+
+//    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            if (mTwoPane) {
+//                Bundle arguments = new Bundle();
+//
+//                arguments.putString(ArticleDetailFragment.ARG_ITEM_ID, item.id);
+//
+//                ArticleDetailFragment fragment = new ArticleDetailFragment();
+//                fragment.setArguments(arguments);
+//                mParentActivity.getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.article_detail_container, fragment)
+//                        .commit();
+//            } else {
+//                Context context = view.getContext();
+//                Intent intent = new Intent(context, ArticleDetailActivity.class);
+//
+//                // intent.putExtra(ArticleDetailFragment.ARG_ITEM_ID, item.id);
+//
+//                context.startActivity(intent);
+//            }
+//        }
+//    };
 
 
     /**

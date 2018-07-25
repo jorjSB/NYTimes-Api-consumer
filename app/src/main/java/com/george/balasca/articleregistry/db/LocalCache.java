@@ -1,5 +1,6 @@
 package com.george.balasca.articleregistry.db;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.paging.DataSource;
 import android.util.Log;
 
@@ -77,5 +78,18 @@ public class LocalCache {
     public DataSource.Factory<Integer, DBCompleteArticle> getDBCompleteArticleDao() {
         DataSource.Factory<Integer, DBCompleteArticle> dbCompleteArticleFactory = dbCompleteArticleDao.getDBCompleteArticles();
         return dbCompleteArticleFactory;
+    }
+
+    public LiveData<DBCompleteArticle> findDBCompleteArticleById(String id) {
+        return dbCompleteArticleDao.findDBCompleteArticleById(id);
+    }
+
+    public void deleteObsoleteArticles(){
+        ioExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                articleDao.deleteAll();
+            }
+        });
     }
 }

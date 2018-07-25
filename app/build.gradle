@@ -27,16 +27,11 @@ ext {
     androidSupportVersion = "27.1.1"
     loggingInterceptorVersion = "3.9.1"
     dbDebuggerVersion = "1.0.4"
-
-    // latest
     roomVersion = "1.1.1"
     lifecycleVersion = "1.1.1"
     pagingVersion = "1.0.1"
-
-    // from the official F*****G WORKING example
-//    roomVersion = "1.1.0-beta1"
-//    lifecycleVersion = "1.1.1"
-//    pagingVersion = "1.0.0-beta1"
+    constrainLayoutVersion = "1.1.2"
+    butterknifeVersion = "8.8.1"
 }
 
 dependencies {
@@ -63,4 +58,11 @@ dependencies {
 
     // DB debugger
     debugImplementation "com.amitshekhar.android:debug-db:${dbDebuggerVersion}"
+
+    // ConstrainLayout
+    implementation "com.android.support.constraint:constraint-layout:${constrainLayoutVersion}"
+
+    // Butterknife
+    implementation "com.jakewharton:butterknife:${butterknifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
 }

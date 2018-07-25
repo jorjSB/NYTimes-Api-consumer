@@ -12,12 +12,15 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ArticleViewHolder extends RecyclerView.ViewHolder {
-    TextView articleItemView;
+    @BindView(R.id.content)  TextView articleItemView;
 
     public ArticleViewHolder(View itemView) {
         super(itemView);
-        articleItemView = itemView.findViewById(R.id.content);
+        ButterKnife.bind(this, itemView);
     }
 
     public void bindTo(DBCompleteArticle dbCompleteArticle) {

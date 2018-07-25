@@ -9,8 +9,12 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.george.balasca.articleregistry.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * An activity representing a single Article detail screen. This
@@ -19,22 +23,16 @@ import com.george.balasca.articleregistry.R;
  * in a {@link ArticleListActivity}.
  */
 public class ArticleDetailActivity extends AppCompatActivity {
+    @BindView(R.id.detail_toolbar)  Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -75,7 +73,9 @@ public class ArticleDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, ArticleListActivity.class));
+
+            //  navigateUpTo(new Intent(this, ArticleListActivity.class));
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

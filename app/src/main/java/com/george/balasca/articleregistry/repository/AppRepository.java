@@ -8,8 +8,10 @@ import android.util.Log;
 
 import com.george.balasca.articleregistry.api.Service;
 import com.george.balasca.articleregistry.db.LocalCache;
+import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.model.NYApiSearchResultObject;
 import com.george.balasca.articleregistry.model.ArticleBoundaryCallback;
+import com.george.balasca.articleregistry.model.SearchQueryPOJO;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
 
 public class AppRepository {
@@ -28,9 +30,13 @@ public class AppRepository {
 
     /**
      * Search - match the query.
+     * @param q
      */
-    public NYApiSearchResultObject search(String q){
+    public NYApiSearchResultObject search(SearchQueryPOJO q){
         Log.d(TAG, "New query: " + q);
+
+        // delete old articles
+        cache.deleteObsoleteArticles();
 
         // Get data source factory from the local cache
         DataSource.Factory dataSourceFactory = cache.getDBCompleteArticleDao();
@@ -39,12 +45,6 @@ public class AppRepository {
         // The BoundaryCallback will observe when the user reaches to the edges of
         // the list and update the database with extra data
         ArticleBoundaryCallback boundaryCallback = new ArticleBoundaryCallback(q, service, cache);
-
-//        PagedList.Config pagedListConfig =
-//                (new PagedList.Config.Builder())
-//                        .setEnablePlaceholders(false)
-//                        .setPageSize(20)
-//                        .build();
 
         // Get the paged list
         LiveData data = new LivePagedListBuilder(dataSourceFactory, 20)
@@ -57,9 +57,6 @@ public class AppRepository {
         NYApiSearchResultObject NYApiSearchResultObject = new NYApiSearchResultObject();
 
         NYApiSearchResultObject.setArticles(data);
-
-
-        // TODO: set the network state/errors here
         NYApiSearchResultObject.setLoadingState(boundaryCallback.getNetworkState());
         NYApiSearchResultObject.setNetworkStatus(boundaryCallback.getNetworkErrors());
 
@@ -68,6 +65,10 @@ public class AppRepository {
 
     public DataSource.Factory<Integer, Article> getAllArticles(){
         return cache.getAllArticles();
+    }
+
+    public LiveData<DBCompleteArticle> findDBCompleteArticleById(String id){
+        return cache.findDBCompleteArticleById(id);
     }
 
 }

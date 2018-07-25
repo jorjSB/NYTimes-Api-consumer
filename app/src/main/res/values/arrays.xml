@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="article_oder">
+        <item>@string/order_newest</item>
+        <item>@string/order_oldest</item>
+    </string-array>
+
+    <string-array name="news_desk_filters">
+        <item>@string/news_desk_1</item>
+        <item>@string/news_desk_2</item>
+        <item>@string/news_desk_3</item>
+        <item>@string/news_desk_4</item>
+        <item>@string/news_desk_5</item>
+        <item>@string/news_desk_6</item>
+        <item>@string/news_desk_7</item>
+        <item>@string/news_desk_8</item>
+        <item>@string/news_desk_9</item>
+        <item>@string/news_desk_10</item>
+        <item>@string/news_desk_11</item>
+        <item>@string/news_desk_12</item>
+        <item>@string/news_desk_13</item>
+        <item>@string/news_desk_14</item>
+        <item>@string/news_desk_15</item>
+        <item>@string/news_desk_16</item>
+        <item>@string/news_desk_17</item>
+        <item>@string/news_desk_18</item>
+        <item>@string/news_desk_19</item>
+        <item>@string/news_desk_20</item>
+        <item>@string/news_desk_21</item>
+        <item>@string/news_desk_22</item>
+        <item>@string/news_desk_23</item>
+        <item>@string/news_desk_24</item>
+        <item>@string/news_desk_25</item>
+        <item>@string/news_desk_26</item>
+    </string-array>
+
+    <string name="news_desk_1">Adventure Sports</string>
+    <string name="news_desk_2"><![CDATA[Arts &amp; Leisure]]></string>
+    <string name="news_desk_3">Arts</string>
+    <string name="news_desk_4">Automobiles</string>
+    <string name="news_desk_5">Blogs</string>
+    <string name="news_desk_6">Books</string>
+    <string name="news_desk_7">Business</string>
+    <string name="news_desk_8">Cars</string>
+    <string name="news_desk_9"><![CDATA[Crosswords &amp; Games]]></string>
+    <string name="news_desk_10">Culture</string>
+    <string name="news_desk_11">Energy</string>
+    <string name="news_desk_12">Environment</string>
+    <string name="news_desk_13"><![CDATA[Fashion &amp; Style]]></string>
+    <string name="news_desk_14">Financial</string>
+    <string name="news_desk_15">Food</string>
+    <string name="news_desk_16">Health</string>
+    <string name="news_desk_17"><![CDATA[Home &amp; Garden]]></string>
+    <string name="news_desk_18">Jobs</string>
+    <string name="news_desk_19">Men\'s Health</string>
+    <string name="news_desk_20">Movies</string>
+    <string name="news_desk_21">Museums</string>
+    <string name="news_desk_22">National</string>
+    <string name="news_desk_23">Obituary</string>
+    <string name="news_desk_24">Personal Investing</string>
+    <string name="news_desk_25">Sports</string>
+    <string name="news_desk_26">Workplace</string>
+</resources>

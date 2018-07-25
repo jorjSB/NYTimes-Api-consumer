@@ -4,4 +4,22 @@
     <string name="retry">Click to retry</string>
     <string name="no_internet_connection">No internet connection available! Check your connection and come back</string>
     <string name="no_results">No results yet.. 😓</string>
+    <string name="search_hint">Search N.Y.Times articles</string>
+    <string name="menu_title_filter">Filter/order</string>
+    <string name="menu_title_search">Search</string>
+    <string name="menu_title_favourites">Favourites</string>
+    <string name="menu_title_newest">Newest</string>
+    <string name="filter_dialog_title">Filter/sort your search</string>
+    <string name="order_newest">Newest</string>
+    <string name="order_oldest">Oldest</string>
+    <string name="filter_begin_date_label">Begin date:</string>
+    <string name="filter_end_date_label">End date:</string>
+    <string name="filter_order_label">Order:</string>
+    <string name="filter_category_label">Category:</string>
+    <string name="filter_submit_button_label">Filter</string>
+    <string name="end_edittext_hint">set end date</string>
+    <string name="begin_edittext_hint">set begin date</string>
+    <string name="searching_for_hint">Searching for:</string>
+    <string name="latest_articles_hint">Loading latest articles</string>
+    <string name="showing_favourite_articles_hint">Loading favourite articles</string>
 </resources>

@@ -9,18 +9,21 @@ import android.support.annotation.NonNull;
 
 import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.model.NYApiSearchResultObject;
+import com.george.balasca.articleregistry.model.SearchQueryPOJO;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.AppRepository;
 import com.george.balasca.articleregistry.repository.NetworkState;
+
+import java.util.ArrayList;
 
 public class DBArticleListViewModel extends ViewModel {
     private static final String TAG = DBArticleListViewModel.class.getSimpleName();
     private AppRepository repository;
 
     // init a mutable live data to listen for queries
-    private MutableLiveData<String> queryLiveData;
+    private MutableLiveData<SearchQueryPOJO> queryLiveData;
 
-    // make the search after each new search item is posted with (searchRepo) using "map"
+    // make the search after each new search item is posted with (searchArticle) using "map"
     private LiveData<NYApiSearchResultObject> repositoryResult;
 
     // get my Articles!!
@@ -30,7 +33,7 @@ public class DBArticleListViewModel extends ViewModel {
     public LiveData<NetworkState> networkLoadingStateLiveData;
 
     // get teh Network errors!
-    public LiveData<String> networkErrorsLiveData;
+    public LiveData<ArrayList<String>> networkErrorsLiveData;
 
     // constructor, init repo
     public DBArticleListViewModel(@NonNull AppRepository repository) {
@@ -38,8 +41,8 @@ public class DBArticleListViewModel extends ViewModel {
 
         queryLiveData = new MutableLiveData();
 
-        repositoryResult =  Transformations.map(queryLiveData, queryString -> {
-            NYApiSearchResultObject result = repository.search(queryString);
+        repositoryResult =  Transformations.map(queryLiveData, queryObject -> {
+            NYApiSearchResultObject result = repository.search(queryObject);
             return result;
         });
 
@@ -54,13 +57,13 @@ public class DBArticleListViewModel extends ViewModel {
 
     }
 
-    // Search REPO
-    public final void searchRepo(@NonNull String queryString) {
-        this.queryLiveData.postValue(queryString);
+    // Search Article(s)
+    public final void searchArticle( @NonNull SearchQueryPOJO searchQueryPOJO) {
+        this.queryLiveData.postValue(searchQueryPOJO);
     }
 
     // LAST Query string used
-    public final String lastQueryValue() {
+    public final SearchQueryPOJO lastQueryValue() {
         return this.queryLiveData.getValue();
     }
 }

@@ -14,16 +14,16 @@ import java.util.List;
 @Dao
 public interface ArticleDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(Article article);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(List<Article> articles);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void update(Article... repos);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertArticles(List<Article> articles);
 
 

@@ -19,10 +19,12 @@ public interface Service {
             @Query("q") String q);
 
     @GET("articlesearch.json")
-    Call<ApiResponse> getQueriedStartEndArticles(
+    Call<ApiResponse> getQueriedFilteredArticles(
             @Query("page") int page,
-            @Query("q") String q,
-            @Query("end_date") int end_date,
-            @Query("begin_date") int begin_date);
+            @Query("q") String query,
+            @Query("fq") String category,
+            @Query("sort") String sort,
+            @Query("begin_date") String begin_date,
+            @Query("end_date") String end_date);
 }
 

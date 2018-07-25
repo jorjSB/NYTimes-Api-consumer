@@ -7,6 +7,8 @@ import android.arch.paging.PagedList;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
 
+import java.util.ArrayList;
+
 /**
  * RepoSearchResult from a search, which contains LiveData<List<Repo>> holding query data,
  * and a LiveData<String> of network error state.
@@ -14,7 +16,7 @@ import com.george.balasca.articleregistry.repository.NetworkState;
 public class NYApiSearchResultObject {
     private LiveData<PagedList<DBCompleteArticle>> articles;
     private LiveData<NetworkState> loadingState;
-    private LiveData<String> networkStatus;
+    private LiveData<ArrayList<String>> networkStatus;
 
 
 
@@ -34,11 +36,11 @@ public class NYApiSearchResultObject {
         this.loadingState = loadingState;
     }
 
-    public LiveData<String> getNetworkStatus() {
+    public LiveData<ArrayList<String>> getNetworkStatus() {
         return networkStatus;
     }
 
-    public void setNetworkStatus(LiveData<String> networkStatus) {
+    public void setNetworkStatus(LiveData<ArrayList<String>> networkStatus) {
         this.networkStatus = networkStatus;
     }
 }

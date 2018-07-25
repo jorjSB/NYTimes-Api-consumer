@@ -1,5 +1,6 @@
 package com.george.balasca.articleregistry.db;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.paging.DataSource;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -22,4 +23,9 @@ public interface DBCompleteArticleDao {
     @Transaction
     @Query("SELECT * FROM article")
     DataSource.Factory<Integer, DBCompleteArticle> getDBCompleteArticles();
+
+    @Transaction
+    @Query("SELECT * FROM article WHERE id=:article_id LIMIT 1")
+    LiveData<DBCompleteArticle> findDBCompleteArticleById(String article_id);
+
 }
