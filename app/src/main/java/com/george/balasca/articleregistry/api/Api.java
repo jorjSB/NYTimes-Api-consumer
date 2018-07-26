@@ -20,6 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public interface Api {
     String TAG = Api.class.getSimpleName();
     String BASE_URL = "https://api.nytimes.com/svc/search/v2/";
+    public  final static String IMAGES_BASE_URL = "https://www.nytimes.com/";
     String API_KEY = "3baa17f100794f77a741c475c8916700";
 
     public static Service createService(Context context) {

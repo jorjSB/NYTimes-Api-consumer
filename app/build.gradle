@@ -32,6 +32,9 @@ ext {
     pagingVersion = "1.0.1"
     constrainLayoutVersion = "1.1.2"
     butterknifeVersion = "8.8.1"
+    picassoVersion = "2.71828"
+    googleAdsVersion = "15.0.1"
+    googleAnalyticsVersion = "16.0.1"
 }
 
 dependencies {
@@ -43,7 +46,6 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:${lifecycleVersion}"
-//    implementation "android.arch.lifecycle:runtime:${lifecycleVersion}"
     annotationProcessor "android.arch.lifecycle:compiler:${lifecycleVersion}"
 
     // Paging
@@ -65,4 +67,14 @@ dependencies {
     // Butterknife
     implementation "com.jakewharton:butterknife:${butterknifeVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
+
+    // Picasso
+    implementation "com.squareup.picasso:picasso:${picassoVersion}"
+
+    // Google ADS
+    implementation "com.google.android.gms:play-services-ads:${googleAdsVersion}"
+
+    // Google Analytics
+    implementation "com.google.android.gms:play-services-analytics:${googleAnalyticsVersion}"
+
 }

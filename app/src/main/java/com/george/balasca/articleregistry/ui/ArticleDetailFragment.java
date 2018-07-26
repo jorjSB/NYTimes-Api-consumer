@@ -17,6 +17,8 @@ import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.ui.viewmodels.DBArticleDetailsViewModel;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +46,7 @@ public class ArticleDetailFragment extends Fragment {
     private boolean favouriteStateChanged = false;
 
     @BindView(R.id.article_detail) TextView article_detail;
+    @BindView(R.id.adView) AdView mAdView;
     FloatingActionButton fab;
 
     /**
@@ -66,7 +69,8 @@ public class ArticleDetailFragment extends Fragment {
             articleId = getArguments().getString(ARG_ITEM_ID);
             dbArticleDetailsViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(getActivity())).get(DBArticleDetailsViewModel.class);
 
-             dbArticleDetailsViewModel.searchArticle(articleId);
+            dbArticleDetailsViewModel.searchArticle(articleId);
+
         }
     }
 
@@ -80,7 +84,9 @@ public class ArticleDetailFragment extends Fragment {
         // need to set it here (no good Butterknife) fab instance from main activity
         fab = getActivity().findViewById(R.id.fab);
 
-
+        // init Ads
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // observe the networkState (loading/loaded/error)
         dbArticleDetailsViewModel.dbCompleteArticleLiveData.observe(this, article ->{

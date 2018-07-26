@@ -26,6 +26,10 @@ import com.george.balasca.articleregistry.model.SearchQueryPOJO;
 import com.george.balasca.articleregistry.repository.NetworkState;
 import com.george.balasca.articleregistry.ui.adapter.ArticleListAdapter;
 import com.george.balasca.articleregistry.ui.viewmodels.DBArticleListViewModel;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +48,12 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
     @BindView(R.id.fab_article_list)  FloatingActionButton fab;
     @BindView(R.id.toolbar)  Toolbar toolbar;
 
+    // Google Analytics
+    private static GoogleAnalytics sAnalytics;
+    private static Tracker sTracker;
+    private Tracker mTracker;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,15 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        // INIT AdMob Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+
+        // Google Analytics
+        sAnalytics = GoogleAnalytics.getInstance(this);
+
+        mTracker = this.getDefaultTracker();
+        mTracker.setScreenName("Main Page - Article List");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         if (findViewById(R.id.article_detail_container) != null) {
             // The detail container view will be present only in the
@@ -293,5 +312,18 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         if(category.compareTo(getResources().getString(R.string.news_desk_0)) != 0) newFilteredSearch.setCategory(category);
 
         searchArticles(newFilteredSearch);
+    }
+
+    /**
+     * Gets the default {@link Tracker}
+     * @return tracker
+     */
+    synchronized public Tracker getDefaultTracker() {
+        // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+        if (sTracker == null) {
+            sTracker = sAnalytics.newTracker(R.xml.global_tracker);
+        }
+
+        return sTracker;
     }
 }

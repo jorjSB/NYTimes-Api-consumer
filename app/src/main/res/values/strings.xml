@@ -27,4 +27,5 @@
     <string name="added_to_fav_suffix">&#160;to your favourite list</string>
     <string name="removed_from_fav_prefix">Successfully removed&#160;</string>
     <string name="removed_from_fav_suffix">&#160;from your favourite list</string>
+    <string name="article_main_image">Article main image</string>
 </resources>

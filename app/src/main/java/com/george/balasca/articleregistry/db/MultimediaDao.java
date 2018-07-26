@@ -28,10 +28,10 @@ public interface MultimediaDao {
     @Delete
     void delete(Multimedium... multimedia);
 
-    @Query("SELECT * FROM multimedia")
+    @Query("SELECT * FROM multimedia ORDER BY width DESC")
     List<Multimedium> getAllMultimedia();
 
-    @Query("SELECT * FROM multimedia WHERE article_original_id=:article_original_id LIMIT 1")
+    @Query("SELECT * FROM multimedia WHERE article_original_id=:article_original_id ORDER BY width DESC")
     List<Multimedium> findMultimediaByArticleUid(final String article_original_id);
 
 }
