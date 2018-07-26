@@ -18,11 +18,15 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".ui.ArticleDetailActivity"
@@ -33,6 +37,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.george.balasca.articleregistry.ui.ArticleListActivity" />
         </activity>
+
+        <receiver android:name=".ui.widget.AppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info" />
+        </receiver>
+
+        <service android:name=".ui.widget.WidgetRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+
     </application>
 
 </manifest>

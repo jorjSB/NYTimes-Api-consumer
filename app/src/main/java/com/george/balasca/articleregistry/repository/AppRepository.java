@@ -14,6 +14,9 @@ import com.george.balasca.articleregistry.model.ArticleBoundaryCallback;
 import com.george.balasca.articleregistry.model.SearchQueryPOJO;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppRepository {
 
     private static final String TAG = AppRepository.class.getSimpleName();
@@ -80,6 +83,12 @@ public class AppRepository {
     public LiveData<PagedList<DBCompleteArticle>> getfavouritesDBCompleteArticle(){
         return liveFavouriteArticlesList;
     }
+
+    // get NOT PAGED live paged list with favourite articles from the DB
+    public List<DBCompleteArticle> getfavouritesDBCompleteArticleList(){
+        return cache.getfavouritesDBCompleteArticleList();
+    }
+
 
     public void setArticleFavouriteState(Boolean isFavourite, String articleId) {
         cache.setArticleFavouriteState(isFavourite, articleId);

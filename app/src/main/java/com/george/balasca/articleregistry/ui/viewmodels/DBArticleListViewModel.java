@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.model.NYApiSearchResultObject;
 import com.george.balasca.articleregistry.model.SearchQueryPOJO;
-import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.AppRepository;
 import com.george.balasca.articleregistry.repository.NetworkState;
 

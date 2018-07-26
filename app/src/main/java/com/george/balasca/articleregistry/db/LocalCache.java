@@ -87,6 +87,11 @@ public class LocalCache {
         return dbCompleteArticleFactory;
     }
 
+    public List<DBCompleteArticle> getfavouritesDBCompleteArticleList() {
+        List<DBCompleteArticle> dbCompleteArticleFactory = dbCompleteArticleDao.getFavouritesDBCompleteArticlesList();
+        return dbCompleteArticleFactory;
+    }
+
     public LiveData<DBCompleteArticle> findDBCompleteArticleById(String id) {
         return dbCompleteArticleDao.findDBCompleteArticleById(id);
     }

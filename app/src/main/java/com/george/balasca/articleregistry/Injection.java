@@ -24,7 +24,7 @@ public class Injection {
     /**
      * Creates an instance of the AppRepository baseed on the API.createService and LocalCache
      */
-    private static AppRepository provideAppRepository(Context context){
+    public static AppRepository provideAppRepository(Context context){
         return new AppRepository(Api.createService(context), provideCache(context));
     }
 

@@ -28,4 +28,7 @@
     <string name="removed_from_fav_prefix">Successfully removed&#160;</string>
     <string name="removed_from_fav_suffix">&#160;from your favourite list</string>
     <string name="article_main_image">Article main image</string>
+    <string name="appwidget_text">Save your favourite articles to see them here</string>
+    <string name="add_widget">Add widget</string>
+    <string name="title_collection_widget">ArticleRegistry / saved articles</string>
 </resources>

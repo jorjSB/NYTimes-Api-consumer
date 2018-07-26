@@ -17,6 +17,7 @@ import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.ui.viewmodels.DBArticleDetailsViewModel;
+import com.george.balasca.articleregistry.ui.widget.AppWidgetProvider;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -100,6 +101,7 @@ public class ArticleDetailFragment extends Fragment {
 
 
     private void handleSnackIfFavouriteStatusChanged(View view, DBCompleteArticle dbCompleteArticle) {
+
         if(currentFavouriteState != dbCompleteArticle.article.getFavourite())
             if(dbCompleteArticle.article.getFavourite())
                 Snackbar.make(view, activity.getResources().getString(R.string.added_to_fav_prefix) +
@@ -125,8 +127,12 @@ public class ArticleDetailFragment extends Fragment {
         handleFabVisualIndicator(dbCompleteArticle);
 
         // show snack only if we removed/added to favourites
-        if(favouriteStateChanged)
+        if(favouriteStateChanged) {
             handleSnackIfFavouriteStatusChanged(getView(), dbCompleteArticle);
+
+            // this will send the broadcast to update the appwidget
+            AppWidgetProvider.sendRefreshBroadcast(getActivity().getApplicationContext());
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
