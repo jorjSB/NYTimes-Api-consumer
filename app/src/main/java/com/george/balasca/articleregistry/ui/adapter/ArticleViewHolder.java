@@ -43,7 +43,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
 
     private String getParsedDate(Date pubDate) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        String parsedDate = formatter.format(pubDate);
+        String parsedDate = pubDate == null ? "n/a" : formatter.format(pubDate);
         return parsedDate;
     }
 
