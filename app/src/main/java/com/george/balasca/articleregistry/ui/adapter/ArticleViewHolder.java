@@ -35,7 +35,8 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
 
 
         artTitle.setText(  article.headline.get(0).getMain());
-        artDate.setText( "Published at:  " + getParsedDate(article.article.getPubDate()));
+        if(article.article != null && article.article.getPubDate() != null)
+            artDate.setText( "Published at:  " + getParsedDate(article.article.getPubDate()));
 
         setMainImage(article);
 

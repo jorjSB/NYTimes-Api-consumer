@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import com.george.balasca.articleregistry.Injection;
@@ -34,6 +35,8 @@ import com.google.android.gms.analytics.Tracker;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.george.balasca.articleregistry.repository.NetworkState.LOADING;
+
 public class ArticleListActivity extends AppCompatActivity implements FilterDialogFragment.OnFiltersSetListener {
 
     private static final String TAG = ArticleListActivity.class.getSimpleName();
@@ -45,6 +48,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
     private ArticleListAdapter articleListAdapter;
     @BindView(R.id.article_list)  RecyclerView recyclerView;
     @BindView(R.id.empty_list) LinearLayout noResultsPlaceholder;
+    @BindView(R.id.empty_list_progress_bar) ProgressBar empty_list_progress_bar;
     @BindView(R.id.fab_article_list)  FloatingActionButton fab;
     @BindView(R.id.toolbar)  Toolbar toolbar;
 
@@ -52,7 +56,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
     private static GoogleAnalytics sAnalytics;
     private static Tracker sTracker;
     private Tracker mTracker;
-
+    private NetworkState networkStateLiveData;
 
 
     @Override
@@ -190,6 +194,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         // observe the networkState (loading/loaded/error)
         localDBViewModel.networkLoadingStateLiveData.observe(this, networkStateLiveData ->{
             articleListAdapter.setNetworkState(networkStateLiveData);
+            this.networkStateLiveData = networkStateLiveData;
         });
 
         // observe the network errors: no internet/error messages from server
@@ -221,7 +226,18 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         });
     }
 
+
+    private void toogleListPlaceholderProgressBar() {
+        if(networkStateLiveData.getNetworkStatus().equals(LOADING))
+            empty_list_progress_bar.setVisibility(View.VISIBLE);
+        else
+            empty_list_progress_bar.setVisibility(View.GONE);
+    }
+
     private void showListPlaceholder(boolean showListPlaceholder) {
+        if(networkStateLiveData != null)
+            toogleListPlaceholderProgressBar();
+
         if(showListPlaceholder){
             recyclerView.setVisibility(View.GONE);
             noResultsPlaceholder.setVisibility(View.VISIBLE);

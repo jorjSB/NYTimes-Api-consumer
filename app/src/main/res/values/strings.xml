@@ -3,7 +3,7 @@
     <string name="title_article_detail">Article Detail</string>
     <string name="retry">Click to retry</string>
     <string name="no_internet_connection">No internet connection! Check and try again. You can visit your saved articles meanwhile.</string>
-    <string name="no_results">No results yet.. 😓</string>
+    <string name="no_results">No content.. 😓</string>
     <string name="search_hint">Search N.Y.Times articles</string>
     <string name="menu_title_filter">Filter/order</string>
     <string name="menu_title_search">Search</string>
