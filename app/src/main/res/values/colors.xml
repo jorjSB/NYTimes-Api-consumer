@@ -9,6 +9,7 @@
 
     <color name="theme_text_icons">#FFFFFF</color>
     <color name="theme_primary_text">#FFFFFF</color>
+    <color name="theme_primary_text_dark">#3d3d3d</color>
     <color name="theme_secondary_text">#585858</color>
     <color name="theme_tertiary_text">#757575</color>
     <color name="theme_divider">#BDBDBD</color>

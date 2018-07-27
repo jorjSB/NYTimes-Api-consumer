@@ -4,27 +4,37 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:orientation="vertical">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/theme_primary_dark"
+        android:padding="5dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@mipmap/ic_launcher_round"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/widgetTitleLabel"
             android:text="@string/title_collection_widget"
-            android:textSize="18dp"
-            android:gravity="center"
-            android:textAllCaps="true" />
-    </FrameLayout>
+            android:textSize="16sp"
+            android:gravity="left"
+            android:textColor="@color/theme_primary_text"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
 
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <ListView
             android:id="@+id/widgetListView"
             android:layout_width="match_parent"
@@ -32,6 +42,26 @@
             android:dividerHeight="1dp"
             android:divider="#eeeeee"
             tools:listitem="@layout/collection_widget_list_item"></ListView>
+
+        <RelativeLayout
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/empty_view_text"
+                android:textStyle="bold" />
+            <ImageView
+                android:alpha="0.2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/no_image_available"/>
+
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

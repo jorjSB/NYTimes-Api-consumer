@@ -42,6 +42,8 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
                 .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.widgetListView, clickPendingIntentTemplate);
 
+        // Handle empty gardens
+        views.setEmptyView(R.id.widgetListView, R.id.empty_view);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
