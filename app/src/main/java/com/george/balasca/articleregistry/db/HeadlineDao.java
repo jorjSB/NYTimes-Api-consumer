@@ -6,7 +6,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.model.modelobjects.Headline;
 
 import java.util.List;

@@ -10,13 +10,9 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.george.balasca.articleregistry.db.helpers.Converters;
-import com.george.balasca.articleregistry.model.DBCompleteArticle;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.model.modelobjects.Headline;
 import com.george.balasca.articleregistry.model.modelobjects.Multimedium;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Database(entities = {Article.class, Headline.class, Multimedium.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
@@ -45,7 +41,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return dbInstance;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback =
+    private static final RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback(){
 
                 @Override
@@ -58,9 +54,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-
         private final ArticleDao mDao;
-
         PopulateDbAsync(AppDatabase db) {
             mDao = db.getArticleDao();
         }

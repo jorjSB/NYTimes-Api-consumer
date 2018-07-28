@@ -10,7 +10,6 @@ import android.widget.RemoteViews;
 
 import com.george.balasca.articleregistry.R;
 import com.george.balasca.articleregistry.ui.ArticleDetailActivity;
-import com.george.balasca.articleregistry.ui.ArticleDetailFragment;
 import com.george.balasca.articleregistry.ui.ArticleListActivity;
 
 /**
@@ -18,10 +17,8 @@ import com.george.balasca.articleregistry.ui.ArticleListActivity;
  */
 public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
-    public static final String EXTRA_LABEL = "ARTICLE_EXTRA_LABEL";
-
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                        int appWidgetId) {
 
         RemoteViews views = new RemoteViews(context.getPackageName(),  R.layout.app_widget );
 
@@ -65,6 +62,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
     @Override
     public void onReceive(final Context context, Intent intent) {
         final String action = intent.getAction();
+        assert action != null;
         if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
             // refresh all your widgets
             AppWidgetManager mgr = AppWidgetManager.getInstance(context);

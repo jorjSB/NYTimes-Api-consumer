@@ -5,7 +5,6 @@ import android.arch.paging.PositionalDataSource;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.george.balasca.articleregistry.api.Api;
 import com.george.balasca.articleregistry.api.Service;
 import com.george.balasca.articleregistry.model.modelobjects.ApiResponse;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
@@ -27,17 +26,15 @@ public class ItemPositionalDataSource extends PositionalDataSource<Article> {
 
     private Service service;
 
-    private LoadRangeParams afterParams;
-    private MutableLiveData networkState;
-    private MutableLiveData initialLoading;
-    private Executor retryExecutor;
+    private final MutableLiveData networkState;
+    private final MutableLiveData initialLoading;
     private LoadInitialParams initialParams;
 
     public ItemPositionalDataSource(Executor retryExecutor) {
         // service = Api.createService(context);
         networkState = new MutableLiveData();
         initialLoading = new MutableLiveData();
-        this.retryExecutor = retryExecutor;
+        Executor retryExecutor1 = retryExecutor;
     }
 
 
@@ -63,8 +60,7 @@ public class ItemPositionalDataSource extends PositionalDataSource<Article> {
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.code() == 200) {
 
-                    ArrayList<Article> articleList = new ArrayList();
-                    articleList.addAll( response.body().getResponseBody().getArticleList() );
+                    ArrayList<Article> articleList = new ArrayList(response.body().getResponseBody().getArticleList());
 
                     callback.onResult(articleList, 0, 10);
 
@@ -95,7 +91,7 @@ public class ItemPositionalDataSource extends PositionalDataSource<Article> {
     public void loadRange(@NonNull LoadRangeParams params, @NonNull LoadRangeCallback<Article> callback) {
         Log.d(TAG, "loadRange, startPosition = " + params.startPosition + ", loadSize = " + params.loadSize);
 
-        afterParams = params;
+        LoadRangeParams afterParams = params;
         networkState.postValue(NetworkState.LOADING);
 
 
@@ -105,8 +101,7 @@ public class ItemPositionalDataSource extends PositionalDataSource<Article> {
 
                 if (response.isSuccessful() && response.code() == 200) {
 
-                    ArrayList<Article> articleList = new ArrayList();
-                    articleList.addAll( response.body().getResponseBody().getArticleList() );
+                    ArrayList<Article> articleList = new ArrayList(response.body().getResponseBody().getArticleList());
 
                     callback.onResult(articleList);
 

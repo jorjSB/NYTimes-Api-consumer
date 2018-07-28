@@ -2,7 +2,6 @@ package com.george.balasca.articleregistry.ui.widget;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -15,9 +14,9 @@ import com.george.balasca.articleregistry.ui.ArticleDetailFragment;
 
 import java.util.List;
 
-public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private Context mContext;
+    private final Context mContext;
     private List<DBCompleteArticle> articles;
 
     public WidgetRemoteViewsFactory(Context applicationContext, Intent intent) {

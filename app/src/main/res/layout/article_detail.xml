@@ -10,10 +10,10 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/adView">
-        <LinearLayout android:id="@+id/art_details_container"
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:focusable="true">
 
             <ImageView android:id="@+id/article_main_image_twopane"
@@ -73,7 +73,6 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
                     app:layout_constraintTop_toTopOf="@+id/date_label" />
 
                 <TextView
-                    android:id="@+id/source_label"
                     style="?android:attr/textAppearanceMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

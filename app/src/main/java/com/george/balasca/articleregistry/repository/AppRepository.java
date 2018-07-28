@@ -14,26 +14,23 @@ import com.george.balasca.articleregistry.model.ArticleBoundaryCallback;
 import com.george.balasca.articleregistry.model.SearchQueryPOJO;
 import com.george.balasca.articleregistry.model.modelobjects.Article;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppRepository {
 
     private static final String TAG = AppRepository.class.getSimpleName();
     private static final int DATABASE_PAGE_SIZE = 20;
-    private Service service;
-    private LocalCache cache;
-    private LiveData<PagedList<Article>> mPagedListLiveData;
-    private LiveData<PagedList<DBCompleteArticle>> liveFavouriteArticlesList;
+    private final Service service;
+    private final LocalCache cache;
+    private final LiveData<PagedList<DBCompleteArticle>> liveFavouriteArticlesList;
 
     public AppRepository(Service service, LocalCache cache) {
         this.service = service;
         this.cache = cache;
 
         DataSource.Factory dataSourceFactory = cache.getfavouritesDBCompleteArticle();
-        LiveData data = new LivePagedListBuilder(dataSourceFactory, 20)
+        liveFavouriteArticlesList = new LivePagedListBuilder(dataSourceFactory, 20)
                 .build();
-        liveFavouriteArticlesList = data;
     }
 
     /**
@@ -59,7 +56,7 @@ public class AppRepository {
                 .setBoundaryCallback(boundaryCallback)
                 .build();
 
-        mPagedListLiveData = data;
+        LiveData<PagedList<Article>> mPagedListLiveData = data;
 
         // new object with results - observables
         NYApiSearchResultObject NYApiSearchResultObject = new NYApiSearchResultObject();

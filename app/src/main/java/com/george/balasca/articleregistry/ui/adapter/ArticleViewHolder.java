@@ -15,10 +15,10 @@ import butterknife.ButterKnife;
 import static com.george.balasca.articleregistry.ui.Helpers.getParsedDate;
 import static com.george.balasca.articleregistry.ui.Helpers.setMainImage;
 
-public class ArticleViewHolder extends RecyclerView.ViewHolder {
+class ArticleViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = ArticleViewHolder.class.getSimpleName();
-    @BindView(R.id.art_title)  TextView artTitle;
-    @BindView(R.id.art_date)  TextView artDate;
+    @BindView(R.id.art_title) TextView artTitle;
+    @BindView(R.id.art_date) TextView artDate;
     @BindView(R.id.art_main_image) ImageView artMainImage;
 
 

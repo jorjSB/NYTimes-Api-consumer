@@ -7,19 +7,18 @@ import java.util.concurrent.Executor;
 
 public class ArticleDataSourceFactory extends DataSource.Factory  {
 
-    MutableLiveData<ItemPositionalDataSource> mutableLiveData;
-    ItemPositionalDataSource itemPositionalDataSource;
+    private final MutableLiveData<ItemPositionalDataSource> mutableLiveData;
 
-    Executor executor;
+    private final Executor executor;
 
     public ArticleDataSourceFactory(Executor executor) {
-        this.mutableLiveData = new MutableLiveData<ItemPositionalDataSource>();
+        this.mutableLiveData = new MutableLiveData<>();
         this.executor = executor;
     }
 
     @Override
     public DataSource create() {
-        itemPositionalDataSource = new ItemPositionalDataSource(executor);
+        ItemPositionalDataSource itemPositionalDataSource = new ItemPositionalDataSource(executor);
         mutableLiveData.postValue(itemPositionalDataSource);
         return itemPositionalDataSource;
     }

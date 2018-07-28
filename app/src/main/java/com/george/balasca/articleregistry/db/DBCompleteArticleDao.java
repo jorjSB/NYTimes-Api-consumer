@@ -8,7 +8,6 @@ import android.arch.persistence.room.Transaction;
 
 import com.george.balasca.articleregistry.model.DBCompleteArticle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -23,6 +22,7 @@ public interface DBCompleteArticleDao {
     DataSource.Factory<Integer, DBCompleteArticle> getFavouritesDBCompleteArticles();
 
     // NOT PAGED -> WiDGET
+    @Transaction
     @Query("SELECT * FROM article WHERE isFavourite == 1")
     List<DBCompleteArticle> getFavouritesDBCompleteArticlesList();
 

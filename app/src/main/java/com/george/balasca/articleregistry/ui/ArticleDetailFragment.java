@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.george.balasca.articleregistry.Injection;
 import com.george.balasca.articleregistry.R;
@@ -28,6 +27,8 @@ import com.george.balasca.articleregistry.ui.viewmodels.DBArticleDetailsViewMode
 import com.george.balasca.articleregistry.ui.widget.AppWidgetProvider;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +47,7 @@ public class ArticleDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String TAG = ArticleDetailFragment.class.getSimpleName();
+    private static final String TAG = ArticleDetailFragment.class.getSimpleName();
     public static final String ARG_ITEM_ID = "item_id";
 
     private DBArticleDetailsViewModel dbArticleDetailsViewModel;
@@ -65,8 +66,9 @@ public class ArticleDetailFragment extends Fragment {
     @BindView(R.id.adView) AdView mAdView;
 
     // from the Parent activity!
-    FloatingActionButton fab;
+    private FloatingActionButton fab;
     @Nullable
+    private
     ImageView article_main_image;
     private boolean mTwoPane = false;
     private DBCompleteArticle article;
@@ -83,10 +85,7 @@ public class ArticleDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (getActivity() instanceof ArticleDetailActivity )
-            mTwoPane = false;
-        else
-            mTwoPane = true;
+        mTwoPane = !(getActivity() instanceof ArticleDetailActivity);
 
         if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID)) {
             // init variables
@@ -109,7 +108,7 @@ public class ArticleDetailFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         // need to set it here (no good Butterknife) fab instance from main activity
-        fab = getActivity().findViewById(R.id.fab);
+        fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
         article_main_image = getActivity().findViewById(R.id.article_main_image);
 
         // init Ads
@@ -159,7 +158,7 @@ public class ArticleDetailFragment extends Fragment {
         if(favouriteStateChanged) {
             handleSnackIfFavouriteStatusChanged(getView(), article);
             // this will send the broadcast to update the appwidget
-            AppWidgetProvider.sendRefreshBroadcast(getActivity().getApplicationContext());
+            AppWidgetProvider.sendRefreshBroadcast(Objects.requireNonNull(getActivity()).getApplicationContext());
         }
 
         // set image for activity (single pane)
@@ -177,7 +176,7 @@ public class ArticleDetailFragment extends Fragment {
             public void onClick(View view) {
                 favouriteStateChanged = true;
                 currentFavouriteState = article.article.getFavourite();
-                boolean newState = currentFavouriteState == true ? false : true;
+                boolean newState = currentFavouriteState != true;
                 dbArticleDetailsViewModel.setArticleFavouriteState(newState, articleId);
             }
         });

@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
  * in a {@link ArticleListActivity}.
  */
 public class ArticleDetailActivity extends AppCompatActivity {
-    @BindView(R.id.detail_toolbar)  Toolbar toolbar;
+    @BindView(R.id.detail_toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

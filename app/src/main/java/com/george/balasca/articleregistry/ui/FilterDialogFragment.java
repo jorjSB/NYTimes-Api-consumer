@@ -1,5 +1,6 @@
 package com.george.balasca.articleregistry.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -23,7 +24,7 @@ public class FilterDialogFragment extends BottomSheetDialogFragment implements V
     @BindView(R.id.category_spinner) Spinner category_spinner;
     @BindView(R.id.submit_filters_button) Button submit_filters_button;
 
-    OnFiltersSetListener mCallback;
+    private OnFiltersSetListener mCallback;
 
     /**
      * An interface containing onFiltersSet() method signature.
@@ -38,8 +39,7 @@ public class FilterDialogFragment extends BottomSheetDialogFragment implements V
     }
 
     public static FilterDialogFragment newInstance() {
-        FilterDialogFragment frag = new FilterDialogFragment();
-        return frag;
+        return new FilterDialogFragment();
     }
 
 
@@ -58,7 +58,7 @@ public class FilterDialogFragment extends BottomSheetDialogFragment implements V
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        view = inflater.inflate(R.layout.fragment_filter_dialog, container, false);
-        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_filter_dialog, null);
+        @SuppressLint("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_filter_dialog, null);
         ButterKnife.bind(this, view);
 
         mCallback = (OnFiltersSetListener) getActivity();
@@ -67,24 +67,21 @@ public class FilterDialogFragment extends BottomSheetDialogFragment implements V
         String dialogTitle = getResources().getString(R.string.filter_dialog_title);
         getDialog().setTitle(dialogTitle);
 
-        getBegin_edittext.setOnClickListener(this::onClick);
-        getEnd_edittext.setOnClickListener(this::onClick);
+        getBegin_edittext.setOnClickListener(this);
+        getEnd_edittext.setOnClickListener(this);
 
-        submit_filters_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // set values for callback
-                if(mCallback != null)
-                {
-                    mCallback.onFiltersSet(
-                            getBegin_edittext.getText().toString(),
-                            getEnd_edittext.getText().toString(),
-                            order_spinner.getSelectedItem().toString(),
-                            category_spinner.getSelectedItem().toString());
-                }
-
-                dismiss();
+        submit_filters_button.setOnClickListener(v -> {
+            // set values for callback
+            if(mCallback != null)
+            {
+                mCallback.onFiltersSet(
+                        getBegin_edittext.getText().toString(),
+                        getEnd_edittext.getText().toString(),
+                        order_spinner.getSelectedItem().toString(),
+                        category_spinner.getSelectedItem().toString());
             }
+
+            dismiss();
         });
         return view;
     }
@@ -101,7 +98,6 @@ public class FilterDialogFragment extends BottomSheetDialogFragment implements V
             case R.id.end_edittext:
                 newPicker.show(getActivity().getSupportFragmentManager(), "datePicker");
                 newPicker.setTargetFragment(this, 2);
-                return;
         }
     }
 

@@ -4,7 +4,6 @@ package com.george.balasca.articleregistry.model;
 import android.arch.lifecycle.LiveData;
 import android.arch.paging.PagedList;
 
-import com.george.balasca.articleregistry.model.modelobjects.Article;
 import com.george.balasca.articleregistry.repository.NetworkState;
 
 import java.util.ArrayList;

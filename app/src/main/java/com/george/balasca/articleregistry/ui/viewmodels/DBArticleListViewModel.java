@@ -17,25 +17,22 @@ import java.util.ArrayList;
 
 public class DBArticleListViewModel extends ViewModel {
     private static final String TAG = DBArticleListViewModel.class.getSimpleName();
-    private AppRepository repository;
+    private final AppRepository repository;
 
     // init a mutable live data to listen for queries
-    private MutableLiveData<SearchQueryPOJO> queryLiveData;
-
-    // make the search after each new search item is posted with (searchArticle) using "map"
-    private LiveData<NYApiSearchResultObject> repositoryResult;
+    private final MutableLiveData<SearchQueryPOJO> queryLiveData;
 
     // get my Articles!!
-    public LiveData<PagedList<DBCompleteArticle>> articlesLiveData;
+    public final LiveData<PagedList<DBCompleteArticle>> articlesLiveData;
 
     // get my fav. Articles!!
     public LiveData<PagedList<DBCompleteArticle>> favouriteArticlesLiveData;
 
     // get teh Network errors!
-    public LiveData<NetworkState> networkLoadingStateLiveData;
+    public final LiveData<NetworkState> networkLoadingStateLiveData;
 
     // get teh Network errors!
-    public LiveData<ArrayList<String>> networkErrorsLiveData;
+    public final LiveData<ArrayList<String>> networkErrorsLiveData;
 
     // constructor, init repo
     public DBArticleListViewModel(@NonNull AppRepository repository) {
@@ -43,9 +40,8 @@ public class DBArticleListViewModel extends ViewModel {
 
         queryLiveData = new MutableLiveData();
 
-        repositoryResult =  Transformations.map(queryLiveData, queryObject -> {
-            NYApiSearchResultObject result = repository.search(queryObject);
-            return result;
+        LiveData<NYApiSearchResultObject> repositoryResult = Transformations.map(queryLiveData, queryObject -> {
+            return repository.search(queryObject);
         });
 
         articlesLiveData = Transformations.switchMap(repositoryResult, object ->

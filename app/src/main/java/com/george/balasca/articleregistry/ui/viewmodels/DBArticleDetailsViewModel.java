@@ -4,22 +4,19 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
-import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import com.george.balasca.articleregistry.model.DBCompleteArticle;
-import com.george.balasca.articleregistry.model.NYApiSearchResultObject;
 import com.george.balasca.articleregistry.repository.AppRepository;
-import com.george.balasca.articleregistry.repository.NetworkState;
 
 public class DBArticleDetailsViewModel extends ViewModel {
     private static final String TAG = DBArticleDetailsViewModel.class.getSimpleName();
-    private AppRepository repository;
+    private final AppRepository repository;
 
     // init a mutable live data to listen for queries
-    private MutableLiveData<String> queryLiveData;
+    private final MutableLiveData<String> queryLiveData;
 
-    public LiveData<DBCompleteArticle> dbCompleteArticleLiveData;
+    public final LiveData<DBCompleteArticle> dbCompleteArticleLiveData;
 
 
     // constructor, init repo

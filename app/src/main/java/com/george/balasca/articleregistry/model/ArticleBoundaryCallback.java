@@ -30,12 +30,12 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
 
     private int lastRequestedPage = 0;
 
-    private SearchQueryPOJO searchQueryPOJO;
-    private Service service;
-    private LocalCache cache;
+    private final SearchQueryPOJO searchQueryPOJO;
+    private final Service service;
+    private final LocalCache cache;
 
-    private MutableLiveData networkState;
-    private MutableLiveData networkErrors;
+    private final MutableLiveData networkState;
+    private final MutableLiveData networkErrors;
 
 
     public ArticleBoundaryCallback(SearchQueryPOJO _searchQueryPOJO, Service service, LocalCache cache) {
@@ -87,8 +87,7 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
                     Log.d(TAG, "API call success " + response.body().getResponseBody().getArticleList().size() + " items loaded page: " + lastRequestedPage);
                     lastRequestedPage++;
 
-                    List<Article> articleList = new ArrayList();
-                    articleList.addAll( response.body().getResponseBody().getArticleList() );
+                    List<Article> articleList = new ArrayList(response.body().getResponseBody().getArticleList());
 
                     // INSERT COMPLETE ARTICLES INTO THE DB
                      cache.insertAllArticles(articleList);
@@ -101,7 +100,7 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
                     // get the exact error from the API response
                     Gson gson = new GsonBuilder().create();
                     ErrorPojoClass mError=new ErrorPojoClass();
-                    ArrayList<String> errorsArray = new ArrayList<String>();
+                    ArrayList<String> errorsArray = new ArrayList<>();
 
                     try {
                         mError= gson.fromJson(response.errorBody().string(),ErrorPojoClass.class);
@@ -121,7 +120,7 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
                     Log.e("API call failed", "response.message() " + response.message() );
                     networkState.postValue(NetworkState.FAILED);
 
-                    ArrayList<String> errors = new ArrayList<String>();
+                    ArrayList<String> errors = new ArrayList<>();
                     errors.add(response.message());
                     networkErrors.postValue(errors);
                 }
@@ -137,7 +136,7 @@ public class ArticleBoundaryCallback extends PagedList.BoundaryCallback<DBComple
                 }
                 networkState.postValue(NetworkState.FAILED);
 
-                ArrayList<String> errors = new ArrayList<String>();
+                ArrayList<String> errors = new ArrayList<>();
                 errors.add(errorMessage);
                 networkErrors.postValue(errors);
             }

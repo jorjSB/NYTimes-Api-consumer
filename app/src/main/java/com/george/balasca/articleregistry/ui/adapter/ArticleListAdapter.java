@@ -77,9 +77,9 @@ public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, Recy
     }
 
 
-    private final View.OnClickListener setOnViewClickListener(DBCompleteArticle item, View itemView) {
+    private View.OnClickListener setOnViewClickListener(DBCompleteArticle item, View itemView) {
 
-        View.OnClickListener mOnClickListener = new View.OnClickListener(){
+        return new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 if (mTwoPane) {
@@ -105,8 +105,6 @@ public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, Recy
                 }
             }
         };
-
-        return mOnClickListener;
 
     }
 
@@ -158,10 +156,6 @@ public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, Recy
     }
 
     private boolean hasExtraRow() {
-        if (networkState != null && networkState != NetworkState.LOADED) {
-            return true;
-        } else {
-            return false;
-        }
+        return networkState != null && networkState != NetworkState.LOADED;
     }
 }

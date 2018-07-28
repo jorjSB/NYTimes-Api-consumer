@@ -14,19 +14,15 @@ import com.george.balasca.articleregistry.repository.networkdatasource.ItemPosit
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class _APIArticlesViewModel extends ViewModel {
-    public LiveData<PagedList<Article>> articleList;
-    public LiveData<NetworkState> networkState;
-    Executor executor;
-    LiveData<ItemPositionalDataSource> tDataSource;
+class _APIArticlesViewModel extends ViewModel {
 
     public _APIArticlesViewModel(){
-        executor = Executors.newFixedThreadPool(5);
+        Executor executor = Executors.newFixedThreadPool(5);
         ArticleDataSourceFactory articleDataSourceFactory = new ArticleDataSourceFactory(executor);
 
-        tDataSource = articleDataSourceFactory.getMutableLiveData();
+        LiveData<ItemPositionalDataSource> tDataSource = articleDataSourceFactory.getMutableLiveData();
 
-        networkState = Transformations.switchMap(articleDataSourceFactory.getMutableLiveData(), dataSource -> {
+        LiveData<NetworkState> networkState = Transformations.switchMap(articleDataSourceFactory.getMutableLiveData(), dataSource -> {
             return dataSource.getNetworkState();
         });
 
@@ -37,7 +33,7 @@ public class _APIArticlesViewModel extends ViewModel {
                         .setInitialLoadSizeHint(30)
                         .build();
 
-        articleList = (new LivePagedListBuilder(articleDataSourceFactory, pagedListConfig))
+        LiveData<PagedList<Article>> articleList = (new LivePagedListBuilder(articleDataSourceFactory, pagedListConfig))
                 .build();
     }
 

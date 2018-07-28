@@ -1,5 +1,6 @@
 package com.george.balasca.articleregistry.ui;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -50,11 +51,10 @@ public class Helpers {
             imageView.setImageResource(R.drawable.no_image_available);
     }
 
-
+    @SuppressLint("SimpleDateFormat")
     public static String getParsedDate(Date pubDate) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        String parsedDate = pubDate == null ? "n/a" : formatter.format(pubDate);
-        return parsedDate;
+        return pubDate == null ? "n/a" : formatter.format(pubDate);
     }
 
 }

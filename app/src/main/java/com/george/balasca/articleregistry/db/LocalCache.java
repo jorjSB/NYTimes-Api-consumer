@@ -20,12 +20,12 @@ import java.util.concurrent.Executor;
  */
 public class LocalCache {
     private static final String TAG = LocalCache.class.getSimpleName();
-    private Executor ioExecutor;
-    private AppDatabase appDatabase;
-    private ArticleDao articleDao;
-    private HeadlineDao headlineDao;
-    private MultimediaDao multimediaDao;
-    private DBCompleteArticleDao dbCompleteArticleDao;
+    private final Executor ioExecutor;
+    private final AppDatabase appDatabase;
+    private final ArticleDao articleDao;
+    private final HeadlineDao headlineDao;
+    private final MultimediaDao multimediaDao;
+    private final DBCompleteArticleDao dbCompleteArticleDao;
 
     public LocalCache(AppDatabase appDatabase, Executor ioExecutor) {
         this.ioExecutor = ioExecutor;
@@ -74,10 +74,12 @@ public class LocalCache {
 //        });
     }
 
+
+    // not needed actually. I replaced a ioExecutor runnable with this AsyncTask to comply with the project requirements
     private class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-        List<Article> articleArrayList;
-        ArrayList<Headline> headlineArrayList;
-        ArrayList<Multimedium> multimediaArrayList;
+        final List<Article> articleArrayList;
+        final ArrayList<Headline> headlineArrayList;
+        final ArrayList<Multimedium> multimediaArrayList;
 
         PopulateDbAsync(List<Article> _articleArrayList,  ArrayList<Headline> _headlineArrayList,  ArrayList<Multimedium> _multimediaArrayList) {
             articleArrayList = _articleArrayList;
@@ -88,16 +90,13 @@ public class LocalCache {
         @Override
         protected Void doInBackground(final Void... params) {
 
-            appDatabase.runInTransaction(new Runnable() {
-                @Override
-                public void run() {
-                    // Log.d(TAG, "Inserting " + articleArrayList.size() + " articles");
-                    articleDao.insert(articleArrayList);
-                    // Log.d(TAG, "Inserting " + multimediaArrayList.size() + " multimedia");
-                    multimediaDao.insert(multimediaArrayList);
-                    // Log.d(TAG, "Inserting " + headlineArrayList.size() + " headliness");
-                    headlineDao.insert(headlineArrayList);
-                }
+            appDatabase.runInTransaction(() -> {
+                // Log.d(TAG, "Inserting " + articleArrayList.size() + " articles");
+                articleDao.insert(articleArrayList);
+                // Log.d(TAG, "Inserting " + multimediaArrayList.size() + " multimedia");
+                multimediaDao.insert(multimediaArrayList);
+                // Log.d(TAG, "Inserting " + headlineArrayList.size() + " headliness");
+                headlineDao.insert(headlineArrayList);
             });
 
             return null;
@@ -107,23 +106,19 @@ public class LocalCache {
 
 
     public DataSource.Factory<Integer, Article> getAllArticles() {
-        DataSource.Factory<Integer, Article> articleFactory = articleDao.getAllArticles();
-        return articleFactory;
+        return articleDao.getAllArticles();
     }
 
     public DataSource.Factory<Integer, DBCompleteArticle> getDBCompleteArticles() {
-        DataSource.Factory<Integer, DBCompleteArticle> dbCompleteArticleFactory = dbCompleteArticleDao.getDBCompleteArticlesWithoutFavourites();
-        return dbCompleteArticleFactory;
+        return dbCompleteArticleDao.getDBCompleteArticlesWithoutFavourites();
     }
 
     public DataSource.Factory<Integer, DBCompleteArticle> getfavouritesDBCompleteArticle() {
-        DataSource.Factory<Integer, DBCompleteArticle> dbCompleteArticleFactory = dbCompleteArticleDao.getFavouritesDBCompleteArticles();
-        return dbCompleteArticleFactory;
+        return dbCompleteArticleDao.getFavouritesDBCompleteArticles();
     }
 
     public List<DBCompleteArticle> getfavouritesDBCompleteArticleList() {
-        List<DBCompleteArticle> dbCompleteArticleFactory = dbCompleteArticleDao.getFavouritesDBCompleteArticlesList();
-        return dbCompleteArticleFactory;
+        return dbCompleteArticleDao.getFavouritesDBCompleteArticlesList();
     }
 
     public LiveData<DBCompleteArticle> findDBCompleteArticleById(String id) {
@@ -131,22 +126,16 @@ public class LocalCache {
     }
 
     public void deleteObsoleteArticles(){
-        ioExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                int noOfDeletedArticles =  articleDao.deleteAllExceptFavourites();
-                Log.d(TAG, "Deleted: " + noOfDeletedArticles + " articles");
-            }
+        ioExecutor.execute(() -> {
+            int noOfDeletedArticles =  articleDao.deleteAllExceptFavourites();
+            Log.d(TAG, "Deleted: " + noOfDeletedArticles + " articles");
         });
     }
 
     public void setArticleFavouriteState(Boolean isFavourite, String articleId) {
-        ioExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                int setFavourite = articleDao.setArticleFavouriteState(isFavourite, articleId);
-                Log.d(TAG, "Switched fav. state to " + isFavourite + ": " + setFavourite);
-            }
+        ioExecutor.execute(() -> {
+            int setFavourite = articleDao.setArticleFavouriteState(isFavourite, articleId);
+            Log.d(TAG, "Switched fav. state to " + isFavourite + ": " + setFavourite);
         });
     }
 }

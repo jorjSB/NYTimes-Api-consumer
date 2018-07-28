@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +33,8 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -46,16 +49,15 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
     private boolean mTwoPane;
     private DBArticleListViewModel localDBViewModel;
     private ArticleListAdapter articleListAdapter;
-    @BindView(R.id.article_list)  RecyclerView recyclerView;
+    @BindView(R.id.article_list) RecyclerView recyclerView;
     @BindView(R.id.empty_list) LinearLayout noResultsPlaceholder;
     @BindView(R.id.empty_list_progress_bar) ProgressBar empty_list_progress_bar;
-    @BindView(R.id.fab)  FloatingActionButton fab;
-    @BindView(R.id.toolbar)  Toolbar toolbar;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     // Google Analytics
     private static GoogleAnalytics sAnalytics;
     private static Tracker sTracker;
-    private Tracker mTracker;
     private NetworkState networkStateLiveData;
 
 
@@ -74,7 +76,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         // Google Analytics
         sAnalytics = GoogleAnalytics.getInstance(this);
 
-        mTracker = this.getDefaultTracker();
+        Tracker mTracker = this.getDefaultTracker();
         mTracker.setScreenName("Main Page - Article List");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -99,12 +101,12 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         // get the VM for this activity
         localDBViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this)).get(DBArticleListViewModel.class);
         assert recyclerView != null;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         /** INIT MY OBJECTS: adapter, observables etc.. */
-
         // setup the List, add observables etc..
-        setupRecyclerView((RecyclerView) recyclerView);
+        setupRecyclerView(recyclerView);
 
         // init search observables
         initSearchObservables();
@@ -187,7 +189,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         localDBViewModel.articlesLiveData.observe(this, pagedListLiveData ->{
             if(pagedListLiveData != null) {
                 articleListAdapter.submitList(pagedListLiveData);
-                showListPlaceholder( pagedListLiveData.size() == 0 ? true : false );
+                showListPlaceholder(pagedListLiveData.size() == 0);
             }
         });
 
@@ -199,12 +201,12 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
 
         // observe the network errors: no internet/error messages from server
         localDBViewModel.networkErrorsLiveData.observe(this, networkErrorsLiveData ->{
-            for (String error: networkErrorsLiveData) {
+            for (String error: Objects.requireNonNull(networkErrorsLiveData)) {
                 showSnackWithConfirmation(error);
             }
 
             // remove the data so it won't show on config changes
-            localDBViewModel.networkErrorsLiveData.getValue().clear();
+            Objects.requireNonNull(localDBViewModel.networkErrorsLiveData.getValue()).clear();
         });
     }
 
@@ -221,7 +223,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
             if(pagedListLiveData != null) {
                 Log.d(TAG, "Favourited items: " + pagedListLiveData.size());
                 articleListAdapter.submitList(pagedListLiveData);
-                showListPlaceholder( pagedListLiveData.size() == 0 ? true : false );
+                showListPlaceholder(pagedListLiveData.size() == 0);
             }
         });
     }
@@ -262,21 +264,12 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         snackBar.show();
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(LAST_SEARCH_QUERY, localDBViewModel.lastQueryValue());
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -291,7 +284,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
 
         // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(true);
         searchView.setSubmitButtonEnabled(true);
 
@@ -345,7 +338,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
      * Gets the default {@link Tracker}
      * @return tracker
      */
-    synchronized public Tracker getDefaultTracker() {
+    private synchronized Tracker getDefaultTracker() {
         // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
         if (sTracker == null) {
             sTracker = sAnalytics.newTracker(R.xml.global_tracker);
