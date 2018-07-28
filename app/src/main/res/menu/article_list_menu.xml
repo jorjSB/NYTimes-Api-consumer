@@ -7,13 +7,15 @@
         android:icon="@drawable/ic_search_white_24dp"
         android:title="@string/menu_title_search"
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:contentDescription="@string/menu_title_search"/>
 
     <item
         android:id="@+id/app_bar_newest"
         android:title="@string/menu_title_newest"
         android:icon="@drawable/ic_collections_white_24dp"
         app:showAsAction="ifRoom"
+        android:contentDescription="@string/menu_title_newest"
         />
 
     <item
@@ -22,6 +24,7 @@
         android:icon="@drawable/ic_filter_list_white_24dp"
         app:showAsAction="ifRoom"
         android:visible="false"
+        android:contentDescription="@string/menu_title_filter"
         />
 
     <item
@@ -29,5 +32,15 @@
         android:title="@string/menu_title_favourites"
         android:icon="@drawable/ic_collections_bookmark_white_24dp"
         app:showAsAction="ifRoom"
+        android:contentDescription="@string/menu_title_favourites"
+        />
+
+    <item
+        android:id="@+id/app_bar_share"
+        android:title="@string/menu_title_share"
+        android:icon="@drawable/ic_share_white_24dp"
+        app:showAsAction="ifRoom"
+        android:visible="false"
+        android:contentDescription="@string/menu_title_share"
         />
 </menu>

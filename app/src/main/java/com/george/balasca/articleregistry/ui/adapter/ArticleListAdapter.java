@@ -1,5 +1,7 @@
 package com.george.balasca.articleregistry.ui.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -54,8 +56,8 @@ public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, Recy
 
         switch (getItemViewType(position)) {
             case R.layout.article_list_content:
-                ((ArticleViewHolder) holder).bindTo(getItem(position));
-                holder.itemView.setOnClickListener( setOnViewClickListener(getItem(position)) );
+                ((ArticleViewHolder) holder).bindTo(getItem(position), mParentActivity);
+                holder.itemView.setOnClickListener( setOnViewClickListener(getItem(position), holder.itemView));
                 break;
             case R.layout.network_state_item:
                 ((NetworkStateItemViewHolder) holder).bindView(networkState);
@@ -75,7 +77,7 @@ public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, Recy
     }
 
 
-    private final View.OnClickListener setOnViewClickListener(DBCompleteArticle item) {
+    private final View.OnClickListener setOnViewClickListener(DBCompleteArticle item, View itemView) {
 
         View.OnClickListener mOnClickListener = new View.OnClickListener(){
             @Override
@@ -90,9 +92,16 @@ public class ArticleListAdapter extends PagedListAdapter<DBCompleteArticle, Recy
                             .commit();
                 } else {
                     Context context = view.getContext();
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(
+                            (Activity) context,
+                            itemView.findViewById(R.id.art_main_image),
+                            itemView.findViewById(R.id.art_main_image)
+                                    .getTransitionName()
+                    ).toBundle();
+
                     Intent intent = new Intent(context, ArticleDetailActivity.class);
                     intent.putExtra(ArticleDetailFragment.ARG_ITEM_ID, item.article.getId());
-                    context.startActivity(intent);
+                    context.startActivity(intent, bundle);
                 }
             }
         };

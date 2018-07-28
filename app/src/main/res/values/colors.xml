@@ -10,10 +10,12 @@
     <color name="theme_text_icons">#FFFFFF</color>
     <color name="theme_primary_text">#FFFFFF</color>
     <color name="theme_primary_text_dark">#3d3d3d</color>
+    <color name="theme_primary_text_dark_transparent">#803d3d3d</color>
     <color name="theme_secondary_text">#585858</color>
     <color name="theme_tertiary_text">#757575</color>
     <color name="theme_divider">#BDBDBD</color>
 
     <color name="theme_light_gray">#BDBDBD</color>
     <color name="theme_dark_gray">#3d3d3d</color>
+    <color name="dark_tint">#6F000000</color>
 </resources>

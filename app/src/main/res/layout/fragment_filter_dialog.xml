@@ -2,9 +2,10 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:elevation="16dp">
 
     <TextView
         android:id="@+id/textView"
@@ -30,7 +31,10 @@
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="@+id/textView"
+        android:nextFocusForward="@id/end_edittext"
+        android:nextFocusDown="@id/end_edittext"
+        />
 
     <TextView
         android:id="@+id/textView2"
@@ -54,7 +58,10 @@
         android:focusable="false"
         app:layout_constraintBottom_toBottomOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="@+id/begin_edittext"
-        app:layout_constraintTop_toTopOf="@+id/textView2" />
+        app:layout_constraintTop_toTopOf="@+id/textView2"
+        android:nextFocusForward="@id/order_spinner"
+        android:nextFocusDown="@id/order_spinner"
+        />
 
     <TextView
         android:id="@+id/textView3"
@@ -74,7 +81,9 @@
         android:entries="@array/article_oder"
         app:layout_constraintBottom_toBottomOf="@+id/textView3"
         app:layout_constraintStart_toStartOf="@+id/end_edittext"
-        app:layout_constraintTop_toTopOf="@+id/textView3" />
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        android:nextFocusForward="@id/category_spinner"
+        android:nextFocusDown="@id/category_spinner"/>
 
     <Spinner
         android:id="@+id/category_spinner"
@@ -84,7 +93,10 @@
         android:entries="@array/news_desk_filters"
         app:layout_constraintBottom_toBottomOf="@+id/textView4"
         app:layout_constraintStart_toStartOf="@+id/order_spinner"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
+        app:layout_constraintTop_toTopOf="@+id/textView4"
+        android:nextFocusForward="@id/submit_filters_button"
+        android:nextFocusDown="@id/submit_filters_button"
+        />
 
     <TextView
         android:id="@+id/textView4"

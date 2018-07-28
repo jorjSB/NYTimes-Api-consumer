@@ -10,6 +10,7 @@
     <ProgressBar android:id="@+id/empty_list_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/loading"
         />
 
     <TextView

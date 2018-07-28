@@ -19,7 +19,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
                 childColumns = "article_original_id",
                 onDelete = CASCADE),
         indices = {@Index("article_original_id")})
-public class Multimedium {
+public class Multimedium implements Comparable<Multimedium>{
 
     @Expose(deserialize = false)
     @NonNull
@@ -117,5 +117,19 @@ public class Multimedium {
 
     public void setWidth(Integer width) {
         this.width = width;
+    }
+
+    /**
+     * Method used to sort the multimedia images based on their width
+     * @param o
+     * @return
+     */
+    @Override
+    public int compareTo(@NonNull Multimedium o) {
+        if (this.getWidth() < o.getWidth() ){
+            return -1;
+        }else{
+            return 1;
+        }
     }
 }

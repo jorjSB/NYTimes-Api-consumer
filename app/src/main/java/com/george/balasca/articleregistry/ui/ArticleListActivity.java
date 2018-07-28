@@ -49,7 +49,7 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
     @BindView(R.id.article_list)  RecyclerView recyclerView;
     @BindView(R.id.empty_list) LinearLayout noResultsPlaceholder;
     @BindView(R.id.empty_list_progress_bar) ProgressBar empty_list_progress_bar;
-    @BindView(R.id.fab_article_list)  FloatingActionButton fab;
+    @BindView(R.id.fab)  FloatingActionButton fab;
     @BindView(R.id.toolbar)  Toolbar toolbar;
 
     // Google Analytics
@@ -281,6 +281,8 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        Log.d(TAG, "menuX activity onCreateOptionsMenu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.article_list_menu, menu);
 
@@ -294,6 +296,13 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         searchView.setSubmitButtonEnabled(true);
 
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.d(TAG, "menuX activity onPrepareOptionsMenu & mTwopane: " + mTwoPane);
+        menu.findItem(R.id.app_bar_share).setVisible(false);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -312,6 +321,8 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
             case R.id.app_bar_filter:
                 showSearchDialogFragment();
                 return true;
+            case R.id.app_bar_share:
+                return false;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -341,5 +352,9 @@ public class ArticleListActivity extends AppCompatActivity implements FilterDial
         }
 
         return sTracker;
+    }
+
+    public boolean getMTwoPane(){
+        return mTwoPane;
     }
 }

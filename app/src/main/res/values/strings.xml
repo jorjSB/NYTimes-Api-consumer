@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ArticleRegistry</string>
+    <string name="app_name">NYTimes ArticleRegistry</string>
     <string name="title_article_detail">Article Detail</string>
     <string name="retry">Click to retry</string>
     <string name="no_internet_connection">No internet connection! Check and try again. You can visit your saved articles meanwhile.</string>
@@ -32,4 +32,15 @@
     <string name="add_widget">Add widget</string>
     <string name="title_collection_widget">ArticleRegistry / saved articles</string>
     <string name="empty_view_text">It\'s time to bookmark some articles to see them here and read them even offline!</string>
+    <string name="list_date_prefix">Date:&#160;</string>
+    <string name="article_link_label">Source:</string>
+    <string name="na">n/a</string>
+    <string name="image_transition">image_transition</string>
+    <string name="menu_title_share">Sharing:&#160;</string>
+    <string name="share_url">Share Articles\'s Originali URL</string>
+    <string name="save_remove_from_favourites_fab">Share/remove from favourites</string>
+    <string name="show_filter_options">Show query filters</string>
+    <string name="powered_by_nytimes">App powered by NYTimes</string>
+    <string name="ads">ADS</string>
+    <string name="loading">Loading</string>
 </resources>

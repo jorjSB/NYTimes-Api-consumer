@@ -2,6 +2,7 @@ package com.george.balasca.articleregistry.db;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.paging.DataSource;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.george.balasca.articleregistry.model.DBCompleteArticle;
@@ -53,24 +54,57 @@ public class LocalCache {
             }
         }
 
-        ioExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                appDatabase.runInTransaction(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Log.d(TAG, "Inserting " + articleArrayList.size() + " articles");
-                        articleDao.insert(articleArrayList);
-                        // Log.d(TAG, "Inserting " + multimediaArrayList.size() + " multimedia");
-                        multimediaDao.insert(multimediaArrayList);
-                        // Log.d(TAG, "Inserting " + headlineArrayList.size() + " headliness");
-                        headlineDao.insert(headlineArrayList);
-                    }
-                });
-            }
-        });
+        new PopulateDbAsync(articleArrayList, headlineArrayList, multimediaArrayList).execute();
 
+//        ioExecutor.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                appDatabase.runInTransaction(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // Log.d(TAG, "Inserting " + articleArrayList.size() + " articles");
+//                        articleDao.insert(articleArrayList);
+//                        // Log.d(TAG, "Inserting " + multimediaArrayList.size() + " multimedia");
+//                        multimediaDao.insert(multimediaArrayList);
+//                        // Log.d(TAG, "Inserting " + headlineArrayList.size() + " headliness");
+//                        headlineDao.insert(headlineArrayList);
+//                    }
+//                });
+//            }
+//        });
     }
+
+    private class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+        List<Article> articleArrayList;
+        ArrayList<Headline> headlineArrayList;
+        ArrayList<Multimedium> multimediaArrayList;
+
+        PopulateDbAsync(List<Article> _articleArrayList,  ArrayList<Headline> _headlineArrayList,  ArrayList<Multimedium> _multimediaArrayList) {
+            articleArrayList = _articleArrayList;
+            headlineArrayList = _headlineArrayList;
+            multimediaArrayList = _multimediaArrayList;
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+
+            appDatabase.runInTransaction(new Runnable() {
+                @Override
+                public void run() {
+                    // Log.d(TAG, "Inserting " + articleArrayList.size() + " articles");
+                    articleDao.insert(articleArrayList);
+                    // Log.d(TAG, "Inserting " + multimediaArrayList.size() + " multimedia");
+                    multimediaDao.insert(multimediaArrayList);
+                    // Log.d(TAG, "Inserting " + headlineArrayList.size() + " headliness");
+                    headlineDao.insert(headlineArrayList);
+                }
+            });
+
+            return null;
+        }
+    }
+
+
 
     public DataSource.Factory<Integer, Article> getAllArticles() {
         DataSource.Factory<Integer, Article> articleFactory = articleDao.getAllArticles();

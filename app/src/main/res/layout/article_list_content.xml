@@ -18,32 +18,27 @@
             android:id="@+id/art_main_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:contentDescription="@string/article_main_image"
             android:maxHeight="250dp"
-            android:scaleType="centerInside"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:transitionName="@string/image_transition"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/image_placeholder" />
 
         <TextView
             android:id="@+id/art_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/art_main_image" />
+            style="@style/CardView.Styles.Title"
+            app:layout_constraintBottom_toBottomOf="@+id/art_main_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/art_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
+            style="@style/CardView.Styles.Date"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/art_title" />
 
